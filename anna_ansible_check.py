@@ -136,6 +136,8 @@ def main():
   else:
    print "Now i'am sad :("
 
+  sys.exit(return_code)
+
 
 if __name__ == '__main__':
   main()
