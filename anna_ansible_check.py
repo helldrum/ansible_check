@@ -28,6 +28,7 @@ def check_args():
   else:
     return options.role_path
 
+
 def check_meta_main(meta):
   return_code = 0
   try:
@@ -115,16 +116,20 @@ def main():
   return_code = check_meta_main(meta) 
 
   try:
-    default=yaml_load(role_path + "/defaults/main.yml")    
+    default_main=yaml_load("{}/defaults/main.yml".format(role_path))    
   except IOError as e:
     print "ERROR: can't open the file {}/defaults/main.yml, this is inexpected .".format(role_path)
     sys.exit(2)
-
-  for var_name in default:
-    if re.match("^{}.*".format(role_name), var_name) is None:
-      print "{} propertie dont respect the naming convention prefix {{role_name}}_var_name into {}/defaults/main.yml".format(
-        var_name,role_path) 
-      return_code =2
+  
+  if default_main is None:
+    print "file {}/defaults/main.yml doesn't have any variables".format(role_path)
+    return_code = 2
+  else:
+    for var_name in default_main:
+     if re.match("^{}.*".format(role_name), var_name) is None:
+       print "{} propertie dont respect the naming convention prefix {{role_name}}_var_name into {}/defaults/main.yml".format(
+         var_name,role_path) 
+       return_code =2
 
   if return_code is 0 :
     print "Everything is fine, keep the good job :)"
