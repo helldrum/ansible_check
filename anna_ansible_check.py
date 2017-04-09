@@ -1,4 +1,6 @@
 #!/usr/bin/python
+#coding:utf8
+
 import os, sys
 import yaml
 import re
@@ -120,7 +122,8 @@ def main():
   except IOError as e:
     print "ERROR: can't open the file {}/defaults/main.yml, this is inexpected .".format(role_path)
     sys.exit(2)
-  
+
+  # default/main.yml  check naming convention
   if default_main is None:
     print "file {}/defaults/main.yml doesn't have any variables".format(role_path)
     return_code = 2
@@ -131,6 +134,49 @@ def main():
          var_name,role_path) 
        return_code =2
 
+  #tasks/main.yml check tags convention
+  try:
+    tasks_main=yaml_load("{}/tasks/main.yml".format(role_path))
+  except IOError as e:
+    print "ERROR: can't open the file {}/tasks/main.yml, this is inexpected .".format(role_path)
+    sys.exit(2)
+  
+  if tasks_main is None:
+    print "file {}/tasks/main.yml doesn't have any entries".format(role_path)
+    return_code = 2
+  else:
+    for entrie in tasks_main:
+      include_name=entrie["include"].split(".yml", 1)[0]
+
+      try:
+        if entrie["tags"][0] != role_name :
+          print "first tag for include {} should be {}, get {} instead into task/main.yml".format(
+            include_name,
+            role_name,
+            entrie["tags"][0])
+      except IndexError as e:
+        print  "tag {} is missing on include {} into task/main.yml".format(role_name,include_name)
+
+      try:
+        if entrie["tags"][1] != include_name :
+          print "second tag for include {} should be {}, get {} instead into task/main.yml".format(
+            include_name,
+            include_name,
+            entrie["tags"][1])
+      except IndexError as e:
+        print  "tag {} is missing on include {} into task/main.yml".format(include_name,include_name)
+
+      try:
+        tag3= "{}-{}".format(role_name,include_name)
+        if entrie["tags"][2] != tag3 :
+          print "third tag for include {} should be {}, get {} instead into task/main.yml".format(
+            include_name,
+            tag3,
+            entrie["tags"][2])
+
+      except IndexError as e:
+        print  "tag {} is missing on include {} into task/main.yml".format(include_name,include_name)
+      return_code =2
   if return_code is 0 :
     print "Everything is fine, keep the good job :)"
   else:
