@@ -1,4 +1,4 @@
-# description 
+# description 
 this script is design to test ansible roles an failed if the roles don't respect skales5 best pratices
 if the script success output will be
 ```
@@ -52,3 +52,9 @@ load the file tasks/main.yml
       - first tag is the name of the role (compared with the value of  ansible_galaxy_tags)
       - second tag is the name of the include file minus ".yml" (example: if include: install.yml, first tag need to be install)
       - third tag need to be exactly the concatenation between the first and the second tag separed with "-" (example rclone-install)
+
+# features in progress
+- check if all the template have the .j2 extention
+- check if the template files have atleast one variable (unless is a plain text file and not a template)  
+- check if all the template began with the string #{ansible managed}
+- check if all the apt module use with item statement 
