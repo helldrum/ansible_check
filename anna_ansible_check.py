@@ -194,9 +194,24 @@ def main():
       print e
 
     with open(full_template_path ,"r") as f:
-      if ("#{ansible managed}" not in  f.readline()) and (not template_filename.endswith(".json.j2")):
-        print "first line of template file " + full_template_path + " need to be #{ansible managed}"
-        return_code = 2
+      firstline = f.readline()
+      if not template_filename.endswith(".json.j2"):
+        if "# {{ansible_managed}}" not in  firstline and "// {{ansible_managed}}" not in  firstline:
+      	  print "first line of template file " + full_template_path + " need to be # {{ansible managed}} or // {{ansible_managed}}"
+          return_code = 2
+
+    flag=False
+    with open(full_template_path ,"r") as f:
+      lines=f.readlines()
+    
+    for line in lines:
+      if "{{" in line:
+        if "ansible managed" not in line:
+          flag=True
+
+    if not flag:
+      print "file {} doesn't have any templated variables so it's a static file and not a template.".format(full_template_path)
+      return_code = 2
 
   if return_code is 0 :
     print "Everything is fine, keep the good job :)"

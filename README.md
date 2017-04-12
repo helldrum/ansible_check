@@ -55,7 +55,8 @@ load the file tasks/main.yml
 
 if the folder template exist
   - check if all the template have the .j2 extention
-  - check if all the template began with the string #{ansible managed}
+  - check if all the template began with the string #{{ ansible managed }}
+  - check if the template files have atleast one variable (unless is a plain text file and not a template)
 
 
 # features in progress
