@@ -194,7 +194,7 @@ def main():
       print e
 
     with open(full_template_path ,"r") as f:
-      if "#{ansible managed}" not in  f.readline() :
+      if ("#{ansible managed}" not in  f.readline()) and (not template_filename.endswith(".json.j2")):
         print "first line of template file " + full_template_path + " need to be #{ansible managed}"
         return_code = 2
 
