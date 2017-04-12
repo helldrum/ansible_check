@@ -1,11 +1,11 @@
 #!/usr/bin/python
 #coding:utf8
 
-import os, sys
+import os
+import sys
 import yaml
 import re
 from optparse import OptionParser
-
 
 def yaml_load(filename):
   with open(filename, 'r') as stream:
@@ -109,11 +109,11 @@ def main():
   try: 
     meta=yaml_load(role_path + "/meta/main.yml")
     role_name=meta["galaxy_info"]["galaxy_tags"][0]
-  except IOError as e:
+  except (IOError, KeyError) as e:
     print "ERROR: some tests depend of the property galaxy_tags into meta/main.yml please create this propertie"
     print "Now i'am sad :("
     sys.exit(2)
-  
+ 
   #check meta/main.yml syntax
   return_code = check_meta_main(meta) 
 
@@ -176,7 +176,28 @@ def main():
 
       except IndexError as e:
         print  "tag {} is missing on include {} into task/main.yml".format(include_name,include_name)
-      return_code =2
+      return_code = 2
+
+  for template_filename in os.listdir(role_path+"/templates/"):
+
+    full_template_path="{}/templates/{}".format(role_path, template_filename)
+
+    if not template_filename.endswith(".j2"):
+      print "file {} in folder template doesn't have the extension j2".format(template_filename)
+      return_code = 2
+
+    try:
+      assert(os.path.getsize(full_template_path) > 0 ), "file {} is empty".format(full_template_path)
+
+    except AssertionError as e:
+      return_code = 2
+      print e
+
+    with open(full_template_path ,"r") as f:
+      if "#{ansible managed}" not in  f.readline() :
+        print "first line of template file " + full_template_path + " need to be #{ansible managed}"
+        return_code = 2
+
   if return_code is 0 :
     print "Everything is fine, keep the good job :)"
   else:
