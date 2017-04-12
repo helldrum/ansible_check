@@ -53,8 +53,11 @@ load the file tasks/main.yml
       - second tag is the name of the include file minus ".yml" (example: if include: install.yml, first tag need to be install)
       - third tag need to be exactly the concatenation between the first and the second tag separed with "-" (example rclone-install)
 
+if the folder template exist
+  - check if all the template have the .j2 extention
+  - check if all the template began with the string #{ansible managed}
+
+
 # features in progress
-- check if all the template have the .j2 extention
 - check if the template files have atleast one variable (unless is a plain text file and not a template)  
-- check if all the template began with the string #{ansible managed}
 - check if all the apt module use with item statement 
