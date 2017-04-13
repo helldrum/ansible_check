@@ -42,12 +42,21 @@ def check_meta_main():
   global return_code
   global role_path
   global role_name
+  global role_platform
 
   try: 
     meta=yaml_load(role_path + "/meta/main.yml")
     role_name=meta["galaxy_info"]["galaxy_tags"][0]
   except (IOError, KeyError) as e:
     print "ERROR: some tests depend of the property galaxy_tags into meta/main.yml please create this propertie"
+    print "Now i'am sad :("
+    sys.exit(2)
+
+  try:
+    meta=yaml_load(role_path + "/meta/main.yml")
+    role_platform=meta["galaxy_info"]["platforms"][0]["name"]
+  except (IOError, KeyError, TypeError) as e:
+    print "ERROR: some tests depend of the property [\"galaxy_info\"][\"platforms\"][0][\"name\"] into meta/main.yml please create this propertie"
     print "Now i'am sad :("
     sys.exit(2)
 
@@ -94,15 +103,6 @@ def check_meta_main():
       return_code = 2
   except KeyError as e:
     print "the key [\"galaxy_info\"][\"min_ansible_version\"] is missing into meta/main.yml"
-    return_code = 2
-
-  try:
-    meta["galaxy_info"]["platforms"]
-    if not meta["galaxy_info"]["platforms"]:
-      print "the key [\"galaxy_info\"][\"platforms\"] is empty into meta/main.yml"
-      return_code = 2
-  except KeyError as e:
-    print "the key [\"galaxy_info\"][\"platforms\"] is missing into meta/main.yml"
     return_code = 2
 
   return return_code

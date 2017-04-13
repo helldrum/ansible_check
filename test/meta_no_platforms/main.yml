@@ -1,6 +1,5 @@
 ---
 galaxy_info:
-  author: moke <moke@skale-5.com>
   description: Install moke
   company: Skale-5
   license: MIT
@@ -9,4 +8,6 @@ galaxy_info:
   - name: Debian
     versions:
     - all
+  galaxy_tags:
+    - moke
 dependencies: []
