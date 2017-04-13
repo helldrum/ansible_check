@@ -53,36 +53,54 @@ def check_meta_main():
 
   try:
     meta["galaxy_info"]["author"]
+    if not meta["galaxy_info"]["author"]:
+      print "the key [\"galaxy_info\"][\"author\"] is empty into meta/main.yml"
+      return_code = 2
   except KeyError as e:
     print "the key [\"galaxy_info\"][\"author\"] is missing into meta/main.yml"
     return_code = 2
 
   try:
     meta["galaxy_info"]["description"]
+    if not meta["galaxy_info"]["description"]:
+      print "the key [\"galaxy_info\"][\"description\"] is empty into meta/main.yml"
+      return_code = 2
   except KeyError as e:
     print "the key [\"galaxy_info\"][\"description\"] is missing into meta/main.yml"
     return_code = 2
 
   try:
     meta["galaxy_info"]["company"]
+    if not meta["galaxy_info"]["company"]:
+      print "the key [\"galaxy_info\"][\"company\"] is empty into meta/main.yml"
+      return_code = 2
   except KeyError as e:
     print "the key [\"galaxy_info\"][\"company\"] is missing into meta/main.yml"
     return_code = 2
 
   try:
     meta["galaxy_info"]["license"]
+    if not meta["galaxy_info"]["license"]:
+      print "the key [\"galaxy_info\"][\"licence\"] is empty into meta/main.yml"
+      return_code = 2
   except KeyError as e:
     print "the key [\"galaxy_info/\"][\"license\"] is missing into meta/main.yml"
     return_code = 2
 
   try:
     meta["galaxy_info"]["min_ansible_version"]
+    if not meta["galaxy_info"]["min_ansible_version"]:
+      print "the key [\"galaxy_info\"][\"min_ansible_version\"] is empty into meta/main.yml"
+      return_code = 2
   except KeyError as e:
     print "the key [\"galaxy_info\"][\"min_ansible_version\"] is missing into meta/main.yml"
     return_code = 2
 
   try:
     meta["galaxy_info"]["platforms"]
+    if not meta["galaxy_info"]["platforms"]:
+      print "the key [\"galaxy_info\"][\"platforms\"] is empty into meta/main.yml"
+      return_code = 2
   except KeyError as e:
     print "the key [\"galaxy_info\"][\"platforms\"] is missing into meta/main.yml"
     return_code = 2
@@ -200,7 +218,7 @@ def check_tasks_main():
 
       except IndexError as e:
         print  "tag {} is missing on include {} into task/main.yml".format(include_name,include_name)
-      return_code = 2
+        return_code = 2
 
 
 def check_templates():
