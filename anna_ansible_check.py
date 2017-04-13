@@ -120,7 +120,9 @@ def main():
   try:
     default_main=yaml_load("{}/defaults/main.yml".format(role_path))    
   except IOError as e:
-    print "can't open the file {}/defaults/main.yml, syntax check for this file will be skipped .".format(role_path)
+    print "FATAL: can't open the file {}/defaults/main.yml , this file is required for playbook run.".format(role_path)
+    print "test end  before the end"
+    print "Now, i'am sad :("
     sys.exit(2)
 
   # default/main.yml  check naming convention
@@ -138,7 +140,9 @@ def main():
   try:
     tasks_main=yaml_load("{}/tasks/main.yml".format(role_path))
   except IOError as e:
-    print "ERROR: can't open the file {}/tasks/main.yml, this is inexpected .".format(role_path)
+    print "FATAL: can't open the file {}/tasks/main.yml, this file is required for playbook run.".format(role_path)
+    print "test end  before the end"
+    print "Now, i'am sad :("
     sys.exit(2)
   
   if tasks_main is None:
