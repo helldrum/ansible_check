@@ -7,7 +7,30 @@ import yaml
 import re
 from optparse import OptionParser
 
+global return_code
+global role_path
+global role_name
+
+def check_args():
+  global role_path
+
+  parser = OptionParser()
+  parser.add_option("-p", "--role_path", dest="role_path",
+                  help="path to the role")
+  (options, args) = parser.parse_args()
+
+  if options.role_path is None:
+    role_path=options.role_path="."
+
+  if not os.path.exists(options.role_path):
+    print "path {} not valid".format(options.role_path)
+    sys.exit(2)
+  else:
+    role_path=options.role_path
+
+
 def yaml_load(filename):
+  global role_name
   with open(filename, 'r') as stream:
       try:
           return (yaml.load(stream))
@@ -15,24 +38,19 @@ def yaml_load(filename):
           print(exc)
 
 
-def check_args():
-  parser = OptionParser()
-  parser.add_option("-p", "--role_path", dest="role_path",
-                  help="path to the role")
-  (options, args) = parser.parse_args()
+def check_meta_main():
+  global return_code
+  global role_path
+  global role_name
 
-  if options.role_path is None:
-    options.role_path="."
-
-  if not os.path.exists(options.role_path):
-    print "path {} not valid".format(options.role_path)
+  try: 
+    meta=yaml_load(role_path + "/meta/main.yml")
+    role_name=meta["galaxy_info"]["galaxy_tags"][0]
+  except (IOError, KeyError) as e:
+    print "ERROR: some tests depend of the property galaxy_tags into meta/main.yml please create this propertie"
+    print "Now i'am sad :("
     sys.exit(2)
-  else:
-    return options.role_path
 
-
-def check_meta_main(meta):
-  return_code = 0
   try:
     meta["galaxy_info"]["author"]
   except KeyError as e:
@@ -71,11 +89,11 @@ def check_meta_main(meta):
 
   return return_code
 
-def main():
-  role_path=check_args()
-  return_code = 0
-  print "Anna Say :"
-  
+
+def check_default_files():
+  global return_code
+  global role_path
+ 
   try:
     assert(os.path.exists(role_path + "/defaults/main.yml")), "file defaults/main.yml not found"
     assert(os.path.getsize(role_path + "/defaults/main.yml") > 0 ), "file defaults/main.yml is empty"
@@ -105,17 +123,12 @@ def main():
   except AssertionError as e:
     return_code = 2
     print e
- 
-  try: 
-    meta=yaml_load(role_path + "/meta/main.yml")
-    role_name=meta["galaxy_info"]["galaxy_tags"][0]
-  except (IOError, KeyError) as e:
-    print "ERROR: some tests depend of the property galaxy_tags into meta/main.yml please create this propertie"
-    print "Now i'am sad :("
-    sys.exit(2)
- 
-  #check meta/main.yml syntax
-  return_code = check_meta_main(meta) 
+
+
+def check_defaults_main():
+  global return_code
+  global role_path
+  global role_name
 
   try:
     default_main=yaml_load("{}/defaults/main.yml".format(role_path))    
@@ -135,6 +148,13 @@ def main():
        print "{} propertie dont respect the naming convention prefix {{role_name}}_var_name into {}/defaults/main.yml".format(
          var_name,role_path) 
        return_code =2
+
+
+def check_tasks_main():
+
+  global return_code
+  global role_path
+  global role_name
 
   #tasks/main.yml check tags convention
   try:
@@ -183,42 +203,61 @@ def main():
       return_code = 2
 
 
-  # check template
-  for template_filename in os.listdir(role_path+"/templates/"):
+def check_templates():
+  global return_code
+  global role_path
 
-    full_template_path="{}/templates/{}".format(role_path, template_filename)
+  try:
+     for template_filename in os.listdir(role_path+"/templates/"):
+       full_template_path="{}/templates/{}".format(role_path, template_filename)
 
-    if not template_filename.endswith(".j2"):
-      print "file {} in folder template doesn't have the extension j2".format(template_filename)
-      return_code = 2
+       if not template_filename.endswith(".j2"):
+         print "file {} in folder template doesn't have the extension j2".format(template_filename)
+         return_code = 2
 
-    try:
-      assert(os.path.getsize(full_template_path) > 0 ), "file {} is empty".format(full_template_path)
+       try:
+         assert(os.path.getsize(full_template_path) > 0 ), "file {} is empty".format(full_template_path)
+       except AssertionError as e:
+         return_code = 2
+         print e
 
-    except AssertionError as e:
-      return_code = 2
-      print e
+       with open(full_template_path ,"r") as f:
+         firstline = f.readline()
 
-    with open(full_template_path ,"r") as f:
-      firstline = f.readline()
-      if not template_filename.endswith(".json.j2"):
-        if "# {{ansible_managed}}" not in  firstline and "// {{ansible_managed}}" not in  firstline:
-      	  print "first line of template file " + full_template_path + " need to be # {{ansible managed}} or // {{ansible_managed}}"
-          return_code = 2
+         if not template_filename.endswith(".json.j2"):
+           if ("# {{ansible_managed}}" not in  firstline) and ("// {{ansible_managed}}" not in  firstline):
+              return_code = 2
+              print "first line of template file {} need to be ansible managed".format(full_template_path)
 
-    flag=False
-    with open(full_template_path ,"r") as f:
-      lines=f.readlines()
-    
-    for line in lines:
-      if "{{" in line:
-        if "ansible managed" not in line:
-          flag=True
+       flag=False
+       with open(full_template_path ,"r") as f:
+         lines=f.readlines()
+       
+       for line in lines:
+         if "{{" in line:
+           if "ansible managed" not in line:
+             flag=True
 
-    if not flag:
-      print "file {} doesn't have any templated variables so it's a static file and not a template.".format(full_template_path)
-      return_code = 2
-########
+       if not flag:
+         print "file {} doesn't have any templated variables so it's a static file and not a template.".format(full_template_path)
+         return_code = 2
+  except OSError:
+    pass # no templates folder (not required)
+
+
+
+def main():
+  global return_code
+  return_code = 0
+  
+  check_args()
+  print "Anna Say :"
+
+  check_default_files()
+  check_meta_main()
+  check_defaults_main()
+  check_tasks_main()
+  check_templates()
 
   if return_code is 0 :
     print "Everything is fine, keep the good job :)"
