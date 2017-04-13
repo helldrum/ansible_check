@@ -120,7 +120,7 @@ def main():
   try:
     default_main=yaml_load("{}/defaults/main.yml".format(role_path))    
   except IOError as e:
-    print "ERROR: can't open the file {}/defaults/main.yml, this is inexpected .".format(role_path)
+    print "can't open the file {}/defaults/main.yml, syntax check for this file will be skipped .".format(role_path)
     sys.exit(2)
 
   # default/main.yml  check naming convention
@@ -178,6 +178,8 @@ def main():
         print  "tag {} is missing on include {} into task/main.yml".format(include_name,include_name)
       return_code = 2
 
+
+  # check template
   for template_filename in os.listdir(role_path+"/templates/"):
 
     full_template_path="{}/templates/{}".format(role_path, template_filename)
@@ -212,6 +214,7 @@ def main():
     if not flag:
       print "file {} doesn't have any templated variables so it's a static file and not a template.".format(full_template_path)
       return_code = 2
+########
 
   if return_code is 0 :
     print "Everything is fine, keep the good job :)"
