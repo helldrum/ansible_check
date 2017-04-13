@@ -1,0 +1,18 @@
+---
+- include: install.yml
+  tags:
+    - rclone
+    - install
+    - rclone-install
+
+- include: cron.yml
+  tags:
+    - rclone
+    - cron
+    - rclone-cron
+
+- include: restore.yml
+  tags:
+    - rclone
+    - restore
+    - rclone-restore

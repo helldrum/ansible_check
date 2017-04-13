@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: author <author@skale-5.com>
+  description: Install moke
+  company: Skale-5
+  license: MIT
+  min_ansible_version: 2.1
+  platforms:
+  - name: Debian
+    versions:
+    - all
+  galaxy_tags:
+    - moke
+dependencies: []
