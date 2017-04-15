@@ -269,7 +269,7 @@ def main():
   return_code = 0
   
   check_args()
-  print "Anna Say :"
+  print "Heather Say :"
 
   check_default_files()
   check_meta_main()
