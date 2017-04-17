@@ -35,3 +35,10 @@ echo -e "\n\n\nTEST:meta platforms empty"
 
 echo -e "\n\n\nTEST:meta no platforms"
 ./ansible_check.py -p test/meta_no_platforms
+
+echo -e "\n\n\nTEST:template file empty"
+./ansible_check.py -p test/template_empty
+
+echo -e "\n\n\nTEST:template file correct but no j2 extension"
+./ansible_check.py -p test/template_not_j2
+
