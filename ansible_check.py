@@ -253,7 +253,7 @@ def check_templates():
        
        for line in lines:
          if "{{" in line:
-           if "ansible managed" not in line:
+           if "ansible_managed" not in line:
              flag=True
 
        if not flag:

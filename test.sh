@@ -42,3 +42,6 @@ echo -e "\n\n\nTEST:template file empty"
 echo -e "\n\n\nTEST:template file correct but no j2 extension"
 ./ansible_check.py -p test/template_not_j2
 
+echo -e "\n\n\nTEST:template file correct but no templated variable on it"
+./ansible_check.py -p test/template_not_templated_var
+
