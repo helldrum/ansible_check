@@ -243,9 +243,9 @@ def check_templates():
          firstline = f.readline()
 
          if not template_filename.endswith(".json.j2"):
-           if ("# {{ansible_managed}}" not in  firstline) and ("// {{ansible_managed}}" not in  firstline):
+           if ("# {{ ansible_managed }}" not in  firstline) and ("// {{ ansible_managed }}" not in  firstline):
               return_code = 2
-              print "first line of template file {} need to be # {{{{ansible_managed}}}} or {{{{ansible_managed}}}}".format(full_template_path)
+              print "first line of template file {} need to be # {{{{ ansible_managed }}}} or {{{{ ansible_managed }}}}".format(full_template_path)
 
        flag=False
        with open(full_template_path ,"r") as f:
