@@ -164,8 +164,11 @@ def check_defaults_main():
   else:
     for var_name in default_main:
      if re.match("^{}.*".format(role_name), var_name) is None:
-       print "{} propertie dont respect the naming convention prefix {{role_name}}_var_name into {}/defaults/main.yml".format(
-         var_name,role_path) 
+       print "{} propertie dont respect the naming convention prefix {}_ into {}/defaults/main.yml".format(
+         var_name, 
+         role_name, 
+         role_path
+       ) 
        return_code =2
 
 
