@@ -35,12 +35,41 @@ def yaml_load(filename):
       except yaml.YAMLError as exc:
           print(exc)
 
+def _check_file_exist_not_empty(current_file):
+  global project_path
+  global return_code
+  try:
+    assert(os.path.exists(current_file)), "file {} not found".format(current_file)
+    assert(os.path.getsize(current_file) > 0), "file {} is empty".format(current_file)
+  except (AssertionError, OSError) as e:
+    return_code = 2
+    print e
+
+def check_default_files():
+  global project_path
+
+  _check_file_exist_not_empty("{}/{}".format(project_path , "ansible.cfg"))
+  _check_file_exist_not_empty("{}/{}".format(project_path , "env_vars/prod.yml"))
+  _check_file_exist_not_empty("{}/{}".format(project_path , "env_vars/preprod.yml"))
+  _check_file_exist_not_empty("{}/{}".format(project_path , "inventories/prod.ini"))
+  _check_file_exist_not_empty("{}/{}".format(project_path , "inventories/preprod.ini"))
+  _check_file_exist_not_empty("{}/{}".format(project_path , "inventories/prod.ini"))
+  _check_file_exist_not_empty("{}/{}".format(project_path , "requirements.txt"))
+
+  try:
+    for filename in os.listdir("{}/plays".format(project_path)):
+      _check_file_exist_not_empty("{}/plays/{}".format(project_path , filename))
+
+  except (AssertionError, OSError) as e:
+    code_return = 2
+    print e
+
 def check_env_vars():
   global project_path
-  
-  for filename in os.listdir("{}/env_vars".format(project_path)):
-    current_env_file = "{}/env_vars/{}".format(project_path, filename)
-    try:
+ 
+  try:
+    for filename in os.listdir("{}/env_vars".format(project_path)):
+      current_env_file = "{}/env_vars/{}".format(project_path, filename)
       env_vars = yaml_load(current_env_file)
 
       if env_vars is None:
@@ -54,10 +83,9 @@ def check_env_vars():
             current_env_file
             )
             return_code = 2
-
-    except (IOError, KeyError) as e:
-      print "Error: unexpected error when open the file {}.".filename
-      sys.exit(2)
+  except (IOError, KeyError, OSError) as e:
+    print "Error: folder {}/env_vars is empty .".format(project_path)
+    return_code = 2
     
 
 def main():
@@ -66,6 +94,7 @@ def main():
 
   check_args()
   print "Heather Say :"
+  check_default_files()
   check_env_vars()
 
 if __name__ == '__main__':
