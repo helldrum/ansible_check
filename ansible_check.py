@@ -20,7 +20,8 @@ def check_args():
   (options, args) = parser.parse_args()
 
   if options.role_path is None:
-    role_path=options.role_path="."
+    print "Error: parameter --role_path mandatory ..."
+    sys.exit(2)
 
   if not os.path.exists(options.role_path):
     print "path {} not valid".format(options.role_path)
