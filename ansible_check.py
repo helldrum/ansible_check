@@ -38,6 +38,15 @@ def yaml_load(filename):
       except yaml.YAMLError as exc:
           print(exc)
 
+def _check_file_exist_not_empty(current_file):
+  global role_path
+  global return_code
+  try:
+    assert(os.path.exists(current_file)), "file {} not found".format(current_file)
+    assert(os.path.getsize(current_file) > 0), "file {} is empty".format(current_file)
+  except (AssertionError, OSError) as e:
+    return_code = 2
+    print e
 
 def check_meta_main():
   global return_code
@@ -45,19 +54,22 @@ def check_meta_main():
   global role_name
   global role_platform
 
-  try: 
-    meta=yaml_load(role_path + "/meta/main.yml")
+  meta_file_path = "{}/{}".format(role_path, "/meta/main.yml") 
+
+  try:
+    meta=yaml_load(meta_file_path)
     role_name=meta["galaxy_info"]["galaxy_tags"][0]
   except (IOError, KeyError) as e:
-    print "ERROR: some tests depend of the property galaxy_tags into meta/main.yml please create this propertie"
+    print "ERROR: some tests depend of the property galaxy_tags into {} please create this propertie".format(meta_file_path)
     print "Now i'am sad :("
     sys.exit(2)
 
   try:
-    meta=yaml_load(role_path + "/meta/main.yml")
+    meta=yaml_load(meta_file_path)
     role_platform=meta["galaxy_info"]["platforms"][0]["name"]
   except (IOError, KeyError, TypeError) as e:
-    print "ERROR: some tests depend of the property [\"galaxy_info\"][\"platforms\"][0][\"name\"] into meta/main.yml please create this propertie"
+    print """ERROR: some tests depend of the property [\"galaxy_info\"][\"platforms\"][0][\"name\"]
+      into {} please create this propertie""".format(meta_file_path)
     print "Now i'am sad :("
     sys.exit(2)
 
@@ -112,37 +124,12 @@ def check_meta_main():
 def check_default_files():
   global return_code
   global role_path
- 
-  try:
-    assert(os.path.exists(role_path + "/defaults/main.yml")), "file defaults/main.yml not found"
-    assert(os.path.getsize(role_path + "/defaults/main.yml") > 0 ), "file defaults/main.yml is empty"
-  except AssertionError as e:
-    return_code = 2
-    print e
-  
-  try:
-    assert(os.path.exists(role_path + "/tasks")),"folder tasks not found"
-    assert(os.path.exists(role_path + "/tasks/main.yml")), "file tasks/main.yml not found"
-    assert(os.path.getsize(role_path + "/tasks/main.yml") > 0 ), "file tasks/main.yml is empty"
-  except AssertionError as e:
-    return_code = 2
-    print e
-  
-  try:
-    assert(os.path.exists(role_path + "/tasks/install.yml")), "file tasks/install.yml not found"
-    assert(os.path.getsize(role_path + "/tasks/install.yml") > 0 ), "file tasks/install.yml is empty"
-  except AssertionError as e:
-    return_code = 2
-    print e
-  
-  try:
-    assert(os.path.exists(role_path + "/meta")),"folder meta not found"
-    assert(os.path.exists(role_path + "/meta/main.yml")), "file meta/main.yml not found"
-    assert(os.path.getsize(role_path + "/meta/main.yml") > 0 ), "file meta/main.yml is empty"
-  except AssertionError as e:
-    return_code = 2
-    print e
 
+  _check_file_exist_not_empty("{}/{}".format(role_path, "defaults/main.yml")) 
+  _check_file_exist_not_empty("{}/{}".format(role_path, "tasks/main.yml")) 
+  _check_file_exist_not_empty("{}/{}".format(role_path, "tasks/install.yml"))
+  _check_file_exist_not_empty("{}/{}".format(role_path, "meta/main.yml"))
+  _check_file_exist_not_empty("{}/{}".format(role_path, "tasks/main.yml"))
 
 def check_defaults_main():
   global return_code
@@ -250,6 +237,7 @@ def check_templates():
            if ("# {{ ansible_managed }}" not in  firstline) and ("// {{ ansible_managed }}" not in  firstline):
               return_code = 2
               print "first line of template file {} need to be # {{{{ ansible_managed }}}} or {{{{ ansible_managed }}}}".format(full_template_path)
+              
 
        flag=False
        with open(full_template_path ,"r") as f:
@@ -261,7 +249,7 @@ def check_templates():
              flag=True
 
        if not flag:
-         print "file {} doesn't have any templated variables so it's a static file and not a template.".format(full_template_path)
+         print "file {} doesn't have any templated variables".format(full_template_path)
          return_code = 2
   except OSError:
     pass # no templates folder (not required)
