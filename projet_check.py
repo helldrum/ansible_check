@@ -55,6 +55,8 @@ def check_default_files():
   _check_file_exist_not_empty("{}/{}".format(project_path , "inventories/preprod.ini"))
   _check_file_exist_not_empty("{}/{}".format(project_path , "inventories/prod.ini"))
   _check_file_exist_not_empty("{}/{}".format(project_path , "requirements.txt"))
+  _check_file_exist_not_empty("{}/{}".format(project_path , "site.yml"))
+  _check_file_exist_not_empty("{}/{}".format(project_path , "README.md"))
 
   try:
     for filename in os.listdir("{}/plays".format(project_path)):
