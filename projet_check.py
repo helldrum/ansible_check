@@ -86,7 +86,24 @@ def check_env_vars():
   except (IOError, KeyError, OSError) as e:
     print "Error: folder {}/env_vars is empty .".format(project_path)
     return_code = 2
-    
+
+
+def check_group_vars():
+  global project_path
+
+  try:
+    for group_folder in os.listdir("{}/group_vars".format(project_path)):
+      try:
+        for group_file in os.listdir("{}/group_vars/{}".format(project_path, group_folder)):
+          _check_file_exist_not_empty("{}/group_vars/{}".format(project_path, group_folder))
+
+      except (IOError, KeyError, OSError) as e:
+        print "Error: folder {}/group_vars is empty .".format(project_path)
+        return_code = 2
+
+  except (IOError, KeyError, OSError) as e:
+    print "Error: folder {}/group_vars is empty .".format(project_path)
+    return_code = 2
 
 def main():
   global return_code
@@ -96,6 +113,13 @@ def main():
   print "Heather Say :"
   check_default_files()
   check_env_vars()
+  check_group_vars()
+  if return_code is 0 :
+    print "Everything is fine, keep the good job :)"
+  else:
+   print "Now i'am sad :("
+
+  sys.exit(return_code)
 
 if __name__ == '__main__':
   main()
