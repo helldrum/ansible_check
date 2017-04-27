@@ -6,11 +6,16 @@ import sys
 import yaml
 import re
 from optparse import OptionParser
+from subprocess import call 
 
 global return_code
 global project_path
+global script_path
+
+script_path = (os.path.dirname(os.path.realpath(__file__)))
 
 def check_args():
+  global return_code
   global project_path
 
   parser = OptionParser()
@@ -46,6 +51,7 @@ def _check_file_exist_not_empty(current_file):
     print e
 
 def check_default_files():
+  global return_code
   global project_path
 
   _check_file_exist_not_empty("{}/{}".format(project_path , "ansible.cfg"))
@@ -67,6 +73,7 @@ def check_default_files():
     print e
 
 def check_env_vars():
+  global return_code
   global project_path
  
   try:
@@ -90,8 +97,23 @@ def check_env_vars():
     return_code = 2
 
 
+def check_site_includes():
+  global return_code
+  global project_path
+
+  try:
+    site_yml = yaml_load("{}/site.yml".format(project_path))
+    for line in site_yml:
+      _check_file_exist_not_empty("{}/{}".format(project_path , line['include']))
+      
+  except (IOError, KeyError, OSError) as e:
+    print "can't read file {}/site.yml".format(project_path)
+    return_code = 2
+
+
 def check_group_vars():
   global project_path
+  global return_code
 
   try:
     for group_folder in os.listdir("{}/group_vars".format(project_path)):
@@ -125,23 +147,38 @@ def check_group_vars():
     print "Error: folder {}/group_vars is empty .".format(project_path)
     return_code = 2
 
+
+def check_roles():
+  global return_code
+  global project_path
+  global script_path
+
+  for role_folder in os.listdir("{}/roles".format(project_path)):
+    if "." not in role_folder:
+      print "\n\n\nCHECK ROLE: {}\n".format(role_folder)
+      role_path = "{}/roles/{}".format(project_path, role_folder)
+      call(["{}/ansible_check.py".format(script_path), "-p", role_path])    
+
 def main():
   global return_code
   return_code = 0
 
   check_args()
+  print "CHECK Project Structure\n\n"
   print "Heather Say :"
   check_default_files()
+  check_site_includes()
   check_env_vars()
   check_group_vars()
+
   if return_code is 0 :
     print "Everything is fine, keep the good job :)"
   else:
    print "Now i'am sad :("
 
+  check_roles()
+
   sys.exit(return_code)
 
 if __name__ == '__main__':
   main()
- 
-
