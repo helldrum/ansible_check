@@ -97,8 +97,26 @@ def check_group_vars():
     for group_folder in os.listdir("{}/group_vars".format(project_path)):
       try:
         for group_file in os.listdir("{}/group_vars/{}".format(project_path, group_folder)):
-          _check_file_exist_not_empty("{}/group_vars/{}".format(project_path, group_folder))
-
+          service_name = os.path.splitext(group_file)[0]
+          current_group_file = "{}/group_vars/{}/{}".format(project_path, group_folder, group_file)  
+          _check_file_exist_not_empty(current_group_file)
+          
+          groups_vars = yaml_load(current_group_file)
+  
+          if groups_vars is None:
+            print "file {} doesn't have any variables".format(current_group_file)
+            return_code = 2
+          else:
+            for group_name in groups_vars:
+              if re.match("^{}_.*".format(service_name), group_name) is None:
+                print "{} propertie dont respect the naming convention prefix {}_ into {}".format(
+                group_name,
+                service_name,
+                current_group_file
+                )
+                return_code = 2
+            
+           
       except (IOError, KeyError, OSError) as e:
         print "Error: folder {}/group_vars is empty .".format(project_path)
         return_code = 2
