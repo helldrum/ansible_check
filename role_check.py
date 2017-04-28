@@ -255,6 +255,8 @@ def main():
   check_tasks_main()
   check_templates()
 
+  sys.exit(return_code)
+
 if __name__ == '__main__':
   main()
   
