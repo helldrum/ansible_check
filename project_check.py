@@ -158,7 +158,7 @@ def check_roles():
       sys.stdout.flush()
       print "\n\n\nCHECK ROLE: {}\n".format(role_folder)
       role_path = "{}/roles/{}".format(project_path, role_folder)
-      call(["{}/ansible_check.py".format(script_path), "-p", role_path])    
+      call(["{}/role_check.py".format(script_path), "-p", role_path])    
       sys.stdout.flush()
 
 def main():
