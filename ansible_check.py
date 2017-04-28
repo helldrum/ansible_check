@@ -240,19 +240,6 @@ def check_templates():
               return_code = 2
               print "first line of template file {} need to be # {{{{ ansible_managed }}}} or {{{{ ansible_managed }}}}".format(full_template_path)
               
-
-       flag=False
-       with open(full_template_path ,"r") as f:
-         lines=f.readlines()
-       
-       for line in lines:
-         if "{{" in line:
-           if "ansible_managed" not in line:
-             flag=True
-
-       if not flag:
-         print "file {} doesn't have any templated variables".format(full_template_path)
-         return_code = 2
   except OSError:
     pass # no templates folder (not required)
 
