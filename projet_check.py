@@ -155,9 +155,11 @@ def check_roles():
 
   for role_folder in os.listdir("{}/roles".format(project_path)):
     if "." not in role_folder:
+      sys.stdout.flush()
       print "\n\n\nCHECK ROLE: {}\n".format(role_folder)
       role_path = "{}/roles/{}".format(project_path, role_folder)
       call(["{}/ansible_check.py".format(script_path), "-p", role_path])    
+      sys.stdout.flush()
 
 def main():
   global return_code

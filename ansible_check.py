@@ -124,7 +124,6 @@ def check_default_files():
 
   _check_file_exist_not_empty("{}/{}".format(role_path, "defaults/main.yml")) 
   _check_file_exist_not_empty("{}/{}".format(role_path, "tasks/main.yml")) 
-  _check_file_exist_not_empty("{}/{}".format(role_path, "tasks/install.yml"))
   _check_file_exist_not_empty("{}/{}".format(role_path, "meta/main.yml"))
   _check_file_exist_not_empty("{}/{}".format(role_path, "tasks/main.yml"))
 
