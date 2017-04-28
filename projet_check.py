@@ -165,18 +165,17 @@ def main():
 
   check_args()
   print "CHECK Project Structure\n\n"
-  print "Heather Say :"
+
   check_default_files()
   check_site_includes()
   check_env_vars()
   check_group_vars()
+  check_roles()
 
   if return_code is 0 :
     print "Everything is fine, keep the good job :)"
   else:
    print "Now i'am sad :("
-
-  check_roles()
 
   sys.exit(return_code)
 

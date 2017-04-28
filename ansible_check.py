@@ -267,21 +267,11 @@ def main():
   return_code = 0
   
   check_args()
-  print "Heather Say :"
-
   check_default_files()
   check_meta_main()
   check_defaults_main()
   check_tasks_main()
   check_templates()
-
-  if return_code is 0 :
-    print "Everything is fine, keep the good job :)"
-  else:
-   print "Now i'am sad :("
-
-  sys.exit(return_code)
-
 
 if __name__ == '__main__':
   main()
