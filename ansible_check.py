@@ -262,7 +262,6 @@ def check_templates():
 def main():
   global return_code
   return_code = 0
-  
   check_args()
   check_default_files()
   check_meta_main()
