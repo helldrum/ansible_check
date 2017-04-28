@@ -61,7 +61,6 @@ def check_meta_main():
     role_name=meta["galaxy_info"]["galaxy_tags"][0]
   except (IOError, KeyError) as e:
     print "ERROR: some tests depend of the property galaxy_tags into {} please create this propertie".format(meta_file_path)
-    print "Now i'am sad :("
     sys.exit(2)
 
   try:
@@ -69,7 +68,6 @@ def check_meta_main():
     role_platform=meta["galaxy_info"]["platforms"][0]["name"]
   except (IOError, KeyError, TypeError) as e:
     print "ERROR: some tests depend of the property [\"galaxy_info\"][\"platforms\"][0][\"name\"], it's not exist into {}".format(meta_file_path)
-    print "Now i'am sad :("
     sys.exit(2)
 
   try:
@@ -141,7 +139,6 @@ def check_defaults_main():
   except IOError as e:
     print "FATAL: can't open the file , this file is required for playbook run.".format(default_main_path)
     print "test end  before the end"
-    print "Now, i'am sad :("
     sys.exit(2)
 
   # default/main.yml  check naming convention

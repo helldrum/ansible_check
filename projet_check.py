@@ -172,11 +172,6 @@ def main():
   check_group_vars()
   check_roles()
 
-  if return_code is 0 :
-    print "Everything is fine, keep the good job :)"
-  else:
-   print "Now i'am sad :("
-
   sys.exit(return_code)
 
 if __name__ == '__main__':
