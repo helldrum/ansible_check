@@ -175,12 +175,19 @@ def main():
   check_site_includes()
   check_env_vars()
   check_group_vars()
+
+  if return_code is 0 :
+    print "Project structure is fine, keep the good job :)"
+  else:
+   print "\nProject structure not good, Now i'am sad :("
+
+
   check_roles()
 
   if return_code is 0 :
-    print "\nEnd of project test,Everything is fine, keep the good job :)"
+    print "\nEnd of  test,Everything is fine, keep the good job :)"
   else:
-   print "\nEnd of project test, Now i'am sad :("
+   print "\nEnd of test, Now i'am sad :("
   
   sys.exit(return_code)
 
