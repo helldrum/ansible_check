@@ -60,14 +60,16 @@ def check_meta_main():
     meta=yaml_load(meta_file_path)
     role_name=meta["galaxy_info"]["galaxy_tags"][0]
   except (IOError, KeyError) as e:
-    print "ERROR: some tests depend of the property galaxy_tags into {} please create this propertie".format(meta_file_path)
+    print "ERROR: some tests depend of the property galaxy_tags into {} please create this propertie, test exit early...".format(meta_file_path)
+    print "Now i'am sad :("
     sys.exit(2)
 
   try:
     meta=yaml_load(meta_file_path)
     role_platform=meta["galaxy_info"]["platforms"][0]["name"]
   except (IOError, KeyError, TypeError) as e:
-    print "ERROR: some tests depend of the property [\"galaxy_info\"][\"platforms\"][0][\"name\"], it's not exist into {}".format(meta_file_path)
+    print "ERROR: some tests depend of the property [\"galaxy_info\"][\"platforms\"][0][\"name\"], it's not exist into {}, , test exit early...".format(meta_file_path)
+    print "Now i'am sad :("
     sys.exit(2)
 
   try:
