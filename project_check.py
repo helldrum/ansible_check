@@ -161,7 +161,7 @@ def check_roles():
       code=call(["{}/role_check.py".format(script_path), "-p", role_path])
       sys.stdout.flush()
       if code is "2":
-        return_code=2
+        return_code = 2
 
 def main():
   global return_code
