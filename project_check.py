@@ -156,8 +156,10 @@ def check_roles():
   for role_folder in os.listdir("{}/roles".format(project_path)):
     if "." not in role_folder:
       print "\n\n\nCHECK ROLE: {}\n".format(role_folder)
+      sys.stdout.flush()
       role_path = "{}/roles/{}".format(project_path, role_folder)
       code=call(["{}/role_check.py".format(script_path), "-p", role_path])
+      sys.stdout.flush()
       if code is "2":
         return_code=2
 
@@ -167,6 +169,7 @@ def main():
 
   check_args()
   print "CHECK Project Structure\n\n"
+  sys.stdout.flush()
 
   check_default_files()
   check_site_includes()
@@ -178,7 +181,7 @@ def main():
     print "\nEnd of project test,Everything is fine, keep the good job :)"
   else:
    print "\nEnd of project test, Now i'am sad :("
-
+  
   sys.exit(return_code)
 
 if __name__ == '__main__':
