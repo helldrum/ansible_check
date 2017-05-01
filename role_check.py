@@ -7,7 +7,7 @@ import yaml
 import re
 from optparse import OptionParser
 
-global return_code
+global role_return_code
 global role_path
 global role_name
 
@@ -40,16 +40,16 @@ def yaml_load(filename):
 
 def _check_file_exist_not_empty(current_file):
   global role_path
-  global return_code
+  global role_return_code
   try:
     assert(os.path.exists(current_file)), "file {} not found".format(current_file)
     assert(os.path.getsize(current_file) > 0), "file {} is empty".format(current_file)
   except (AssertionError, OSError) as e:
-    return_code = 2
+    role_return_code = 2
     print e
 
 def check_meta_main():
-  global return_code
+  global role_return_code
   global role_path
   global role_name
   global role_platform
@@ -76,52 +76,52 @@ def check_meta_main():
     meta["galaxy_info"]["author"]
     if not meta["galaxy_info"]["author"]:
       print "the key [\"galaxy_info\"][\"author\"] is empty into {}".format(meta_file_path)
-      return_code = 2
+      role_return_code = 2
   except KeyError as e:
     print "the key [\"galaxy_info\"][\"author\"] is missing into {}".format(meta_file_path)
-    return_code = 2
+    role_return_code = 2
 
   try:
     meta["galaxy_info"]["description"]
     if not meta["galaxy_info"]["description"]:
       print "the key [\"galaxy_info\"][\"description\"] is empty into {}".format(meta_file_path)
-      return_code = 2
+      role_return_code = 2
   except KeyError as e:
     print "the key [\"galaxy_info\"][\"description\"] is missing into {}".format(meta_file_path)
-    return_code = 2
+    role_return_code = 2
 
   try:
     meta["galaxy_info"]["company"]
     if not meta["galaxy_info"]["company"]:
       print "the key [\"galaxy_info\"][\"company\"] is empty into {}".format(meta_file_path)
-      return_code = 2
+      role_return_code = 2
   except KeyError as e:
     print "the key [\"galaxy_info\"][\"company\"] is missing into {}".format(meta_file_path)
-    return_code = 2
+    role_return_code = 2
 
   try:
     meta["galaxy_info"]["license"]
     if not meta["galaxy_info"]["license"]:
       print "the key [\"galaxy_info\"][\"licence\"] is empty into {}".format(meta_file_path)
-      return_code = 2
+      role_return_code = 2
   except KeyError as e:
     print "the key [\"galaxy_info/\"][\"license\"] is missing into {}".format(meta_file_path)
-    return_code = 2
+    role_return_code = 2
 
   try:
     meta["galaxy_info"]["min_ansible_version"]
     if not meta["galaxy_info"]["min_ansible_version"]:
       print "the key [\"galaxy_info\"][\"min_ansible_version\"] is empty into {}".format(meta_file_path)
-      return_code = 2
+      role_return_code = 2
   except KeyError as e:
     print "the key [\"galaxy_info\"][\"min_ansible_version\"] is missing into {}".format(meta_file_path)
-    return_code = 2
+    role_return_code = 2
 
-  return return_code
+  return role_return_code
 
 
 def check_default_files():
-  global return_code
+  global role_return_code
   global role_path
 
   _check_file_exist_not_empty("{}/{}".format(role_path, "defaults/main.yml")) 
@@ -130,7 +130,7 @@ def check_default_files():
   _check_file_exist_not_empty("{}/{}".format(role_path, "tasks/main.yml"))
 
 def check_defaults_main():
-  global return_code
+  global role_return_code
   global role_path
   global role_name
  
@@ -145,7 +145,7 @@ def check_defaults_main():
   # default/main.yml  check naming convention
   if default_main is None:
     print "file {} doesn't have any variables".format(default_main_path)
-    return_code = 2
+    role_return_code = 2
   else:
     for var_name in default_main:
      if re.match("^{}.*".format(role_name), var_name) is None:
@@ -154,12 +154,12 @@ def check_defaults_main():
          role_name, 
          default_main_path
        ) 
-       return_code =2
+       role_return_code =2
 
 
 def check_tasks_main():
 
-  global return_code
+  global role_return_code
   global role_path
   global role_name
 
@@ -174,7 +174,7 @@ def check_tasks_main():
   
   if tasks_main is None:
     print "file {} doesn't have any entries".format(file_task_main_path)
-    return_code = 2
+    role_return_code = 2
   else:
     for entrie in tasks_main:
       include_name=entrie["include"].split(".yml", 1)[0]
@@ -213,11 +213,11 @@ def check_tasks_main():
 
       except IndexError as e:
         print  "tag {} is missing on include {} into {}.".format(include_name, include_name, file_task_main_path)
-        return_code = 2
+        role_return_code = 2
 
 
 def check_templates():
-  global return_code
+  global role_return_code
   global role_path
 
   try:
@@ -226,12 +226,12 @@ def check_templates():
 
        if not template_filename.endswith(".j2"):
          print "file {} in folder template doesn't have the extension j2".format(full_template_path)
-         return_code = 2
+         role_return_code = 2
 
        try:
          assert(os.path.getsize(full_template_path) > 0 ), "file {} is empty".format(full_template_path)
        except AssertionError as e:
-         return_code = 2
+         role_return_code = 2
          print e
 
        with open(full_template_path ,"r") as f:
@@ -239,7 +239,7 @@ def check_templates():
 
          if not template_filename.endswith(".json.j2"):
            if ("# {{ ansible_managed }}" not in  firstline) and ("// {{ ansible_managed }}" not in  firstline):
-              return_code = 2
+              role_return_code = 2
               print "first line of template file {} need to be # {{{{ ansible_managed }}}} or {{{{ ansible_managed }}}}".format(full_template_path)
               
   except OSError:
@@ -248,8 +248,8 @@ def check_templates():
 
 
 def main():
-  global return_code
-  return_code = 0
+  global role_return_code
+  role_return_code = 0
   check_args()
   check_default_files()
   check_meta_main()
@@ -257,12 +257,12 @@ def main():
   check_tasks_main()
   check_templates()
 
-  if return_code is 0 :
+  if role_return_code is 0 :
     print "Everything is fine, keep the good job :)"
   else:
    print "Now i'am sad :("
 
-  sys.exit(return_code)
+  sys.exit(role_return_code)
 
 if __name__ == '__main__':
   main()

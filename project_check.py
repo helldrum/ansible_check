@@ -160,13 +160,12 @@ def check_roles():
       role_path = "{}/roles/{}".format(project_path, role_folder)
       code=call(["{}/role_check.py".format(script_path), "-p", role_path])
       sys.stdout.flush()
-      if code is "2":
+      if code is 2:
         return_code = 2
 
 def main():
   global return_code
   return_code = 0
-
   check_args()
   print "CHECK Project Structure\n\n"
   sys.stdout.flush()
@@ -180,7 +179,6 @@ def main():
     print "Project structure is fine, keep the good job :)"
   else:
    print "\nProject structure not good, Now i'am sad :("
-
 
   check_roles()
 
