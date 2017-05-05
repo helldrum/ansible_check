@@ -34,7 +34,7 @@ you better use the -p parameter in order to give the path to the role you want t
 ```
 WARNING: this script doesn't work with multiples roles and in a full project structure (doesn't check group_var and env_var folder)  use project_check.py instead
 
-#### checking steps
+#### role checking steps
 defaults/main.yml exist and not empty
 tasks/main.yml exist and not empty
 tasks/install.yml  exist and not empty
@@ -117,3 +117,34 @@ Now i'am sad :(
 
 End of test, Now i'am sad :(
 ```
+#### project checking steps
+the script check is thoses files exist and are not empty 
+
+ansible.cfg
+env_vars/prod.yml
+env_vars/preprod.yml
+inventories/prod.ini
+inventories/preprod.ini
+inventories/prod.ini
+requirements.txt
+site.yml
+README.md
+
+
+in  folder play check is all the files are not empty
+
+in folder env_vars
+  check if file have at least one variable
+  check if all variables begin with the prefix 'env_'
+  
+in the file site.yml
+    check if all the includes files exist on the project and not empty
+    
+in the group_var folder
+    check if all the files are not empty
+    check if all the files have at least one variable
+    check if all the file respect the naming convention prefix 'file_name_'
+        example:
+        on group_vars/www/rclone.yml all the variable begin with 'rclone_'
+
+    
