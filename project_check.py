@@ -167,7 +167,7 @@ def main():
   global return_code
   return_code = 0
   check_args()
-  print "CHECK Project Structure\n\n"
+  print "CHECK Project Structure\n"
   sys.stdout.flush()
 
   check_default_files()
@@ -178,7 +178,7 @@ def main():
   if return_code is 0 :
     print "Project structure is fine, keep the good job :)"
   else:
-   print "\nProject structure not good, Now i'am sad :("
+   print "Project structure not good, Now i'am sad :("
 
   check_roles()
 
