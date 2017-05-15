@@ -1,0 +1,9 @@
+#!/usr/bin/python
+import re
+
+role_name="beep_bop1-trololo"
+pattern="[a-z0-1_]*"
+if re.match(pattern,role_name) is None or re.match(pattern,role_name).group() is not role_name :
+  print "prout"
+  print re.match(pattern,role_name).group()
+

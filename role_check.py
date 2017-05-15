@@ -59,8 +59,26 @@ def check_meta_main():
   try:
     meta=yaml_load(meta_file_path)
     role_name=meta["galaxy_info"]["galaxy_tags"][0]
+
   except (IOError, KeyError) as e:
-    print "ERROR: some tests depend of the property galaxy_tags into {} please create this propertie, test exit early...".format(meta_file_path)
+    print "ERROR: some tests depend of the property galaxy_tags into {} \
+\nplease create this propertie, test exit early...".format(meta_file_path)
+    print "Now i'am sad :("
+    sys.exit(2)
+
+  try:
+    pattern="[a-z0-1_]*"
+    if re.match(pattern,role_name) is None or re.match(pattern,role_name).group() is not role_name :
+      raise KeyError
+  except (KeyError) as e:
+    print "ERROR: property galaxy_tags into {} doesn't match pattern {} give '{}' match '{}' \
+\nplease fix this propertie, test exit early...".format(
+      meta_file_path, 
+      pattern,
+      role_name,
+      re.match(pattern,role_name).group()
+    )
+ 
     print "Now i'am sad :("
     sys.exit(2)
 
@@ -148,13 +166,13 @@ def check_defaults_main():
     role_return_code = 2
   else:
     for var_name in default_main:
-     if re.match("^{}.*".format(role_name), var_name) is None:
-       print "{} propertie dont respect the naming convention prefix {}_ into {}.".format(
-         var_name, 
-         role_name, 
-         default_main_path
-       ) 
-       role_return_code =2
+      if re.match("^{}.*".format(role_name), var_name) is None:
+        print "{} propertie dont respect the naming convention prefix {}_ into {}.".format(
+          var_name, 
+          role_name, 
+          default_main_path
+        ) 
+        role_return_code = 2
 
 
 def check_tasks_main():
