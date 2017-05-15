@@ -235,12 +235,12 @@ def check_templates():
          print e
 
        with open(full_template_path ,"r") as f:
-         firstline = f.readline()
+         template_content = f.read()
 
          if not template_filename.endswith(".json.j2"):
-           if ("# {{ ansible_managed }}" not in  firstline) and ("// {{ ansible_managed }}" not in  firstline):
+           if ("# {{ ansible_managed }}" not in  template_content) and ("// {{ ansible_managed }}" not in  template_content):
               role_return_code = 2
-              print "first line of template file {} need to be # {{{{ ansible_managed }}}} or // {{{{ ansible_managed }}}}".format(full_template_path)
+              print "template file {} need to have the string # {{{{ ansible_managed }}}} or // {{{{ ansible_managed }}}}".format(full_template_path)
               
   except OSError:
     pass # no templates folder (not required)
