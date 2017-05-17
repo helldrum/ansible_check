@@ -59,6 +59,7 @@ def check_meta_main():
   try:
     meta=yaml_load(meta_file_path)
     role_name=meta["galaxy_info"]["galaxy_tags"][0]
+    role_name = role_name.replace("-","_")
 
   except (IOError, KeyError) as e:
     print "ERROR: some tests depend of the property galaxy_tags into {} \
@@ -78,7 +79,6 @@ def check_meta_main():
       role_name,
       re.match(pattern,role_name).group()
     )
- 
     print "Now i'am sad :("
     sys.exit(2)
 
