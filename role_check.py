@@ -256,9 +256,9 @@ def check_templates():
          template_content = f.read()
 
          if not template_filename.endswith(".json.j2"):
-           if ("# {{ ansible_managed }}" not in  template_content) and ("// {{ ansible_managed }}" not in  template_content):
+           if "{{ ansible_managed }}" not in  template_content:
               role_return_code = 2
-              print "template file {} need to have the string # {{{{ ansible_managed }}}} or // {{{{ ansible_managed }}}}".format(full_template_path)
+              print "template file {} need to have the variable {{{{ ansible_managed }}}}".format(full_template_path)
               
   except OSError:
     pass # no templates folder (not required)
