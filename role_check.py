@@ -199,30 +199,30 @@ def check_tasks_main():
 
       try:
         if entrie["tags"][0] != role_name :
-          print "first tag for include {} should be {}, get {} instead into {}".format(
+          print "first tag for include '{}' should be '{}', get '{}' instead into {}".format(
             include_name,
             role_name,
             entrie["tags"][0],
             file_task_main_path
           )
       except IndexError as e:
-        print  "tag {} is missing on include {} into {}".format(role_name, include_name, file_task_main_path)
+        print  "tag '{}' is missing on include '{}' into {}".format(role_name, include_name, file_task_main_path)
 
       try:
         if entrie["tags"][1] != include_name :
-          print "second tag for include {} should be {}, get {} instead into {}".format(
+          print "second tag for include '{}' should be '{}', get '{}' instead into {}".format(
             include_name,
             include_name,
             entrie["tags"][1],
             file_task_main_path
           )
       except IndexError as e:
-        print  "tag {} is missing on include {} into {}".format(include_name, include_name, file_task_main_path)
+        print  "tag '{}' is missing on include '{}' into {}".format(include_name, include_name, file_task_main_path)
 
       try:
         tag3= "{}-{}".format(role_name,include_name)
         if entrie["tags"][2] != tag3 :
-          print "third tag for include {} should be {}, get {} instead into {}.".format(
+          print "third tag rolename-includename for include '{}' should be '{}', get {} instead into {}.".format(
             include_name,
             tag3,
             entrie["tags"][2],
@@ -230,7 +230,7 @@ def check_tasks_main():
           )
 
       except IndexError as e:
-        print  "tag {} is missing on include {} into {}.".format(include_name, include_name, file_task_main_path)
+        print  "tag rolename-includename is missing on include {} into {}.".format(include_name, file_task_main_path)
         role_return_code = 2
 
 
