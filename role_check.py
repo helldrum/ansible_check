@@ -68,7 +68,7 @@ def check_meta_main():
     sys.exit(2)
 
   try:
-    pattern="[a-z0-1_]*"
+    pattern="[a-z0-9_]*"
     if re.match(pattern,role_name) is None or re.match(pattern,role_name).group() is not role_name :
       raise KeyError
   except (KeyError) as e:
