@@ -24,11 +24,11 @@ def check_args():
   (options, args) = parser.parse_args()
 
   if options.project_path is None:
-    print "property project_path is mandatory, exiting ..."
+    print "ERROR:property project_path is mandatory, exiting ..."
     sys.exit(2)
 
   if not os.path.exists(options.project_path):
-    print "path {} not valid".format(options.project_path)
+    print "ERROR:path {} not valid".format(options.project_path)
     sys.exit(2)
   else:
     project_path=options.project_path
@@ -93,7 +93,7 @@ def check_env_vars():
             )
             return_code = 2
   except (IOError, KeyError, OSError) as e:
-    print "Error: folder {}/env_vars is empty .".format(project_path)
+    print "Error: folder {}/env_vars is empty.".format(project_path)
     return_code = 2
 
 
@@ -110,17 +110,29 @@ def check_site_includes():
     print "can't read file {}/site.yml".format(project_path)
     return_code = 2
 
+def get_group_vars_path():
+  global project_path
+  global return_code
 
-def check_group_vars():
+  if os.path.isdir("{}/group_vars".format(project_path)):
+    return "group_vars"
+  elif os.path.isdir("{}/inventories/group_vars".format(project_path)):
+    return "inventories/group_vars"
+  else:
+     print "ERROR: folder group_vars is missing, some tests can be achieved existing early..."
+     exit(0)
+
+
+def check_group_vars(group_var_path):
   global project_path
   global return_code
 
   try:
-    for group_folder in os.listdir("{}/group_vars".format(project_path)):
+    for group_folder in os.listdir("{}/{}".format(project_path, group_var_path)):
       try:
-        for group_file in os.listdir("{}/group_vars/{}".format(project_path, group_folder)):
+        for group_file in os.listdir("{}/{}/{}".format(project_path, group_var_path ,group_folder)):
           service_name = os.path.splitext(group_file)[0]
-          current_group_file = "{}/group_vars/{}/{}".format(project_path, group_folder, group_file)  
+          current_group_file = "{}/{}/{}/{}".format(project_path, group_var_path, group_folder, group_file)  
           _check_file_exist_not_empty(current_group_file)
           
           groups_vars = yaml_load(current_group_file)
@@ -140,11 +152,11 @@ def check_group_vars():
             
            
       except (IOError, KeyError, OSError) as e:
-        print "Error: folder {}/group_vars is empty .".format(project_path)
+        print "Error: folder {}/{} is empty .".format(project_path, group_var_path)
         return_code = 2
 
   except (IOError, KeyError, OSError) as e:
-    print "Error: folder {}/group_vars is empty .".format(project_path)
+    print "Error: folder {}/group_vars is empty .".format(project_path, group_var_path)
     return_code = 2
 
 
@@ -173,7 +185,8 @@ def main():
   check_default_files()
   check_site_includes()
   check_env_vars()
-  check_group_vars()
+  group_var_path=get_group_vars_path()
+  check_group_vars(group_var_path)
 
   if return_code is 0 :
     print "Project structure is fine, keep the good job :)"
