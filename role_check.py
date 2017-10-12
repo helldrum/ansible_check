@@ -86,7 +86,7 @@ def check_meta_main():
     meta=yaml_load(meta_file_path)
     role_platform=meta["galaxy_info"]["platforms"][0]["name"]
   except (IOError, KeyError, TypeError) as e:
-    print "ERROR: some tests depend of the property [\"galaxy_info\"][\"platforms\"][0][\"name\"], it's not exist into {}, , test exit early...".format(meta_file_path)
+    print "ERROR: some tests depend of the property [\"galaxy_info\"][\"platforms\"][0][\"name\"], it's not exist into {} , test exit early...".format(meta_file_path)
     print "Now i'am sad :("
     sys.exit(2)
 
@@ -195,7 +195,13 @@ def check_tasks_main():
     role_return_code = 2
   else:
     for entrie in tasks_main:
-      include_name=entrie["include"].split(".yml", 1)[0]
+
+      try:
+        include_name=entrie["include"].split(".yml", 1)[0]
+      except KeyError as e:
+        print "ERROR: some tests depend of the includes files and tags, it's not exist into {} , test exit early...".format(file_task_main_path)
+        print "Now i'am sad :("
+        sys.exit(2)
 
       try:
         if entrie["tags"][0] != role_name :
@@ -205,9 +211,11 @@ def check_tasks_main():
             entrie["tags"][0],
             file_task_main_path
           )
-      except IndexError as e:
-        print  "tag '{}' is missing on include '{}' into {}".format(role_name, include_name, file_task_main_path)
+          role_return_code = 2
 
+      except (IndexError, KeyError) as e:
+        print  "tag '{}' is missing on include '{}' into {}".format(role_name, include_name, file_task_main_path)
+        role_return_code = 2
       try:
         if entrie["tags"][1] != include_name :
           print "second tag for include '{}' should be '{}', get '{}' instead into {}".format(
@@ -216,9 +224,11 @@ def check_tasks_main():
             entrie["tags"][1],
             file_task_main_path
           )
-      except IndexError as e:
-        print  "tag '{}' is missing on include '{}' into {}".format(include_name, include_name, file_task_main_path)
+          role_return_code = 2
 
+      except (IndexError,KeyError) as e:
+        print  "tag '{}' is missing on include '{}' into {}".format(include_name, include_name, file_task_main_path)
+        role_return_code = 2
       try:
         tag3= "{}-{}".format(role_name,include_name)
         if entrie["tags"][2] != tag3 :
@@ -228,8 +238,9 @@ def check_tasks_main():
             entrie["tags"][2],
             file_task_main_path
           )
+          role_return_code = 2
 
-      except IndexError as e:
+      except (IndexError, KeyError) as e:
         print  "tag rolename-includename is missing on include {} into {}.".format(include_name, file_task_main_path)
         role_return_code = 2
 
