@@ -61,7 +61,7 @@ def check_meta_main():
     role_name=meta["galaxy_info"]["galaxy_tags"][0]
     role_name = role_name.replace("-","_")
 
-  except (IOError, KeyError) as e:
+  except (IOError, KeyError, AttributeError) as e:
     print "ERROR: some tests depend of the property galaxy_tags into {} \
 \nplease create this propertie, test exit early...".format(meta_file_path)
     print "Now i'am sad :("
