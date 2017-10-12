@@ -48,3 +48,5 @@ echo -e "\n\n\nTEST:template file correct but no j2 extension"
 echo -e "\n\n\nTEST:template file correct but no templated variable on it"
 ./role_check.py -p test/template_not_templated_var
 
+echo -e "\n\n\nTEST: task/main.yml doesn't have any include"
+ ./role_check.py -p test/no_includes
