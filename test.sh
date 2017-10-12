@@ -15,8 +15,11 @@ echo -e "\n\n\nTEST:no meta"
 echo -e "\n\n\nTEST:meta no galaxy-tags"
 ./role_check.py -p test/meta_no_galaxy-tag
 
-echo -e "\n\n\nTEST:meta galaxy-tags empty"
+echo -e "\n\n\nTEST:meta no galaxy-tags"
 ./role_check.py -p test/meta_no_galaxy-tag
+
+echo -e "\n\n\nTEST:meta galaxy-tag empty"
+./role_check.py -p test/meta_galaxy-tag_empty
 
 echo -e "\n\n\nTEST:meta author empty"
 ./role_check.py -p test/meta_author_empty

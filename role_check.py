@@ -61,7 +61,7 @@ def check_meta_main():
     role_name=meta["galaxy_info"]["galaxy_tags"][0]
     role_name = role_name.replace("-","_")
 
-  except (IOError, KeyError, AttributeError) as e:
+  except (IOError, KeyError, AttributeError, TypeError ) as e:
     print "ERROR: some tests depend of the property galaxy_tags into {} \
 \nplease create this propertie, test exit early...".format(meta_file_path)
     print "Now i'am sad :("
@@ -198,7 +198,7 @@ def check_tasks_main():
 
       try:
         include_name=entrie["include"].split(".yml", 1)[0]
-      except KeyError as e:
+      except (KeyError, TypeError) as e:
         print "ERROR: some tests depend of the includes files and tags, it's not exist into {} , test exit early...".format(file_task_main_path)
         print "Now i'am sad :("
         sys.exit(2)
