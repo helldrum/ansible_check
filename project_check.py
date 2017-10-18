@@ -86,6 +86,7 @@ def check_env_vars():
         return_code = 2
       else:
         for var_name in env_vars:
+          var_name = var_name.replace("-","_")
           if re.match("^env_.*", var_name) is None:
             print "{} propertie dont respect the naming convention prefix env_ into {}".format(
             var_name, 
@@ -132,6 +133,7 @@ def check_group_vars(group_var_path):
       try:
         for group_file in os.listdir("{}/{}/{}".format(project_path, group_var_path ,group_folder)):
           service_name = os.path.splitext(group_file)[0]
+          service_name= service_name.replace("-","_")
           current_group_file = "{}/{}/{}/{}".format(project_path, group_var_path, group_folder, group_file)  
           _check_file_exist_not_empty(current_group_file)
           
