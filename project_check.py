@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #coding:utf8
 
 import os
@@ -13,6 +13,10 @@ global project_path
 global script_path
 
 script_path = (os.path.dirname(os.path.realpath(__file__)))
+
+GREEN_COLOR='\x1b[6;30;42m'
+RED_COLOR='\x1b[6;30;41m'
+RESET_COLOR='\x1b[0m'
 
 def check_args():
   global return_code

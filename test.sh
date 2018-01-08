@@ -1,12 +1,12 @@
 #!/bin/bash
 
-echo -e "TEST:no_defaults\n"
+echo -e "TEST:no_defaults"
 ./role_check.py -p test/no_defaults
 
-echo -e "\n\n\nTEST:no_task\n"
+echo -e "\n\n\nTEST:no_task"
 ./role_check.py -p test/no_tasks
 
-echo -e "\n\n\nTEST:no_task_install\n"
+echo -e "\n\n\nTEST:no_task_install"
 ./role_check.py -p test/no_tasks_install
 
 echo -e "\n\n\nTEST:no meta"
@@ -44,9 +44,6 @@ echo -e "\n\n\nTEST:template file empty"
 
 echo -e "\n\n\nTEST:template file correct but no j2 extension"
 ./role_check.py -p test/template_not_j2
-
-echo -e "\n\n\nTEST:template file correct but no templated variable on it"
-./role_check.py -p test/template_not_templated_var
 
 echo -e "\n\n\nTEST: task/main.yml doesn't have any include"
  ./role_check.py -p test/no_includes

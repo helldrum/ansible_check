@@ -1,0 +1,5 @@
+---
+- name: moke install 
+- debug: msg="install"
+ 
+
