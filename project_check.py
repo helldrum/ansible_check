@@ -48,8 +48,8 @@ def _check_file_exist_not_empty(current_file):
   global project_path
   global return_code
   try:
-    assert(os.path.exists(current_file)), "file {} not found".format(current_file)
-    assert(os.path.getsize(current_file) > 0), "file {} is empty".format(current_file)
+    assert(os.path.exists(current_file)), RED_COLOR + "file {} not found".format(current_file) + RESET_COLOR
+    assert(os.path.getsize(current_file) > 0), RED_COLOR + "file {} is empty".format(current_file) + RESET_COLOR
   except (AssertionError, OSError) as e:
     return_code = 2
     print e
@@ -86,19 +86,19 @@ def check_env_vars():
       env_vars = yaml_load(current_env_file)
 
       if env_vars is None:
-        print "file {} doesn't have any variables".format(current_env_file)
+        print RED_COLOR + "file {} doesn't have any variables".format(current_env_file) + RESET_COLOR
         return_code = 2
       else:
         for var_name in env_vars:
           var_name = var_name.replace("-","_")
           if re.match("^env_.*", var_name) is None:
-            print "{} propertie dont respect the naming convention prefix env_ into {}".format(
+            print RED_COLOR + "{} propertie dont respect the naming convention prefix env_ into {}".format(
             var_name, 
             current_env_file
-            )
+            ) + RESET_COLOR
             return_code = 2
   except (IOError, KeyError, OSError) as e:
-    print "Error: folder {}/env_vars is empty.".format(project_path)
+    print RED_COLOR + "folder {}/env_vars is empty.".format(project_path) + RESET_COLOR
     return_code = 2
 
 
@@ -111,8 +111,8 @@ def check_site_includes():
     for line in site_yml:
       _check_file_exist_not_empty("{}/{}".format(project_path , line['include']))
       
-  except (IOError, KeyError, OSError) as e:
-    print "can't read file {}/site.yml".format(project_path)
+  except (IOError, KeyError, OSError, TypeError) as e:
+    print RED_COLOR + "can't read file {}/site.yml".format(project_path) + RESET_COLOR
     return_code = 2
 
 def get_group_vars_path():
@@ -124,7 +124,7 @@ def get_group_vars_path():
   elif os.path.isdir("{}/inventories/group_vars".format(project_path)):
     return "inventories/group_vars"
   else:
-     print "ERROR: folder group_vars is missing, some tests can be achieved existing early..."
+     print RED_COLOR + "folder group_vars is missing, some tests can be achieved existing early..." + RESET_COLOR
      exit(0)
 
 
@@ -144,25 +144,25 @@ def check_group_vars(group_var_path):
           groups_vars = yaml_load(current_group_file)
   
           if groups_vars is None:
-            print "file {} doesn't have any variables".format(current_group_file)
+            print RED_COLOR + "file {} doesn't have any variables".format(current_group_file) + RESET_COLOR
             return_code = 2
           else:
             for group_name in groups_vars:
               if re.match("^{}_.*".format(service_name), group_name) is None:
-                print "{} propertie dont respect the naming convention prefix {}_ into {}".format(
+                print RED_COLOR + "{} propertie dont respect the naming convention prefix {}_ into {}".format(
                 group_name,
                 service_name,
                 current_group_file
-                )
+                ) + RESET_COLOR
                 return_code = 2
             
            
       except (IOError, KeyError, OSError) as e:
-        print "Error: folder {}/{} is empty .".format(project_path, group_var_path)
+        print RED_COLOR + "folder {}/{} is empty .".format(project_path, group_var_path) + RESET_COLOR
         return_code = 2
 
   except (IOError, KeyError, OSError) as e:
-    print "Error: folder {}/group_vars is empty .".format(project_path, group_var_path)
+    print RED_COLOR + "folder {}/group_vars is empty .".format(project_path, group_var_path) + RESET_COLOR
     return_code = 2
 
 
@@ -195,16 +195,18 @@ def main():
   check_group_vars(group_var_path)
 
   if return_code is 0 :
-    print "Project structure is fine, keep the good job :)"
+    print GREEN_COLOR + "Project structure is fine, keep the good job :)" + RESET_COLOR
   else:
-   print "Project structure not good, Now i'am sad :("
+   print RED_COLOR + "Project structure not good, Now i'am sad :(" + RESET_COLOR
 
   check_roles()
 
   if return_code is 0 :
-    print "\nEnd of  test,Everything is fine, keep the good job :)"
+    print "\n"
+    print GREEN_COLOR + "End of  test,Everything is fine, keep the good job :)" + RESET_COLOR
   else:
-   print "\nEnd of test, Now i'am sad :("
+   print "\n"
+   print RED_COLOR + "End of test, Now i'am sad :(" + RESET_COLOR
   
   sys.exit(return_code)
 

@@ -1,7 +1,19 @@
 #!/bin/bash
 
-echo -e "TEST:no_defaults"
-./role_check.py -p test/no_defaults
+echo -e "TEST:project doesn't have required files"
+./project_check.py -p test/project/missing_required_files
+
+echo -e "\n\nTEST:project site includes missformed"
+./project_check.py -p test/project/missformed_site_file/
+
+echo -e "\n\nTEST:project env not respect naming convention"
+./project_check.py -p test/project/env_var_naming_convention
+
+echo -e "\n\nTEST:project doesn't have group_vars folder"
+./project_check.py -p test/project/missing_group_var_folder
+
+echo -e "\n\nTEST: role doesn't have defaults folder"
+./role_check.py -p test/no_default_folder
 
 echo -e "\n\n\nTEST:no_task"
 ./role_check.py -p test/no_tasks
