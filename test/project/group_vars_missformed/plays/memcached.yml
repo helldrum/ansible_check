@@ -1,0 +1,7 @@
+---
+- hosts: memcached
+  become: true
+  vars_files:
+    - ../env_vars/{{env}}.yml
+  roles:
+    - memcached

@@ -111,8 +111,11 @@ def check_site_includes():
     for line in site_yml:
       _check_file_exist_not_empty("{}/{}".format(project_path , line['include']))
       
-  except (IOError, KeyError, OSError, TypeError) as e:
+  except (IOError, OSError):
     print RED_COLOR + "can't read file {}/site.yml".format(project_path) + RESET_COLOR
+    return_code = 2
+  except(KeyError, TypeError):
+    print RED_COLOR + "can't read includes in file {}/site.yml, file is missformed.".format(project_path) + RESET_COLOR
     return_code = 2
 
 def get_group_vars_path():
@@ -125,6 +128,7 @@ def get_group_vars_path():
     return "inventories/group_vars"
   else:
      print RED_COLOR + "folder group_vars is missing, some tests can be achieved existing early..." + RESET_COLOR
+     print RED_COLOR + "Project structure not good, Now i'am sad :(" + RESET_COLOR
      exit(0)
 
 
@@ -203,10 +207,10 @@ def main():
 
   if return_code is 0 :
     print "\n"
-    print GREEN_COLOR + "End of  test,Everything is fine, keep the good job :)" + RESET_COLOR
+    print GREEN_COLOR + "End of tests, everything is fine, keep the good job :)" + RESET_COLOR
   else:
    print "\n"
-   print RED_COLOR + "End of test, Now i'am sad :(" + RESET_COLOR
+   print RED_COLOR + "End of tests, some tests failed, now i'am sad :(" + RESET_COLOR
   
   sys.exit(return_code)
 

@@ -1,0 +1,2 @@
+#!/usr/bin/env ansible-playbook
+- include: plays/memcached.yml

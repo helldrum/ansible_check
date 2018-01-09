@@ -1,0 +1,3 @@
+base_foo: bar
+base_baz: qux
+missformed_group_var: plop

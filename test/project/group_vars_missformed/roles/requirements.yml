@@ -1,0 +1,7 @@
+---
+
+- src: git@git.sk5.io:roles/base.git
+  version: v1.0.0
+  name: base
+  scm: git
+

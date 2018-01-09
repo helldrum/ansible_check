@@ -1,0 +1,12 @@
+image: helldrum/alpine-terraform-ansible
+
+stages :
+  - ansible-check
+
+ansible-check:
+  stage: ansible-check
+  tags:
+    - test
+  script:
+    - git clone https://github.com/helldrum/ansible_check.git /builds/dev/ansible_check
+    - /usr/bin/python /builds/dev/ansible_check/project_check.py -p $CI_PROJECT_DIR
