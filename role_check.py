@@ -64,7 +64,7 @@ def check_meta_main():
     meta=yaml_load(meta_file_path)
     role_name=meta["galaxy_info"]["galaxy_tags"][0]
     role_name = role_name.replace("-","_")
-  except (IOError, KeyError, AttributeError, TypeError ) as e:
+  except (IOError, KeyError, AttributeError, TypeError, IndexError ) as e:
     print RED_COLOR + "ERROR: some tests depend of the property galaxy_tags into {} \
       \nplease create this propertie, test exit early...".format(meta_file_path) + RESET_COLOR
     print RED_COLOR + "Now i'am sad :(" + RESET_COLOR
