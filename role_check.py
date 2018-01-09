@@ -218,7 +218,7 @@ def check_tasks_main():
           role_return_code = 2
 
       except (IndexError, KeyError) as e:
-        print  RED_COLOR + "tag '{}' is missing on include '{}' into {}".format(
+        print RED_COLOR + "tag '{}' is missing on include '{}' into {}".format(
           role_name,
           include_name, 
           file_task_main_path
@@ -235,7 +235,11 @@ def check_tasks_main():
           role_return_code = 2
 
       except (IndexError,KeyError) as e:
-        print  "tag '{}' is missing on include '{}' into {}".format(include_name, include_name, file_task_main_path)
+        print RED_COLOR + "tag '{}' is missing on include '{}' into {}".format(
+          include_name,
+          include_name,
+          file_task_main_path
+        ) + RESET_COLOR
         role_return_code = 2
       try:
         tag3= "{}-{}".format(role_name,include_name)
