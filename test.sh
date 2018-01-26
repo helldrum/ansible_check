@@ -62,3 +62,6 @@ echo -e "\n\n\nTEST:role have one template file with no j2 extension"
 
 echo -e "\n\n\nTEST:role file task/main.yml doesn't have any includes"
  ./role_check.py -p test/no_includes
+
+echo -e "\n\n\nTEST:role can use keywords import_tasks or include_tasks or include"
+./role_check.py -p test/include_import_tasks_include_tasks

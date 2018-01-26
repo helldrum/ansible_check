@@ -1,0 +1,18 @@
+---
+- include: install.yml
+  tags:
+    - moke
+    - install
+    - moke-install
+
+- import_tasks: install.yml
+  tags:
+    - moke
+    - install
+    - moke-install
+
+- include_tasks: install.yml
+  tags:
+    - moke
+    - install
+    - moke-install

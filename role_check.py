@@ -179,6 +179,26 @@ def check_defaults_main():
         role_return_code = 2
 
 
+def _resolve_includes_name(dict_to_resolve):
+  try:
+    if dict_to_resolve["include"]:
+      return "include"
+  except(KeyError, TypeError):
+    pass
+
+  try:
+    if dict_to_resolve["import_tasks"]:
+      return "import_tasks"
+  except(KeyError, TypeError):
+    pass
+
+  try:
+    if dict_to_resolve["include_tasks"]:
+      return "include_tasks"
+  except(KeyError, TypeError):
+    pass
+
+
 def check_tasks_main():
 
   global role_return_code
@@ -199,11 +219,11 @@ def check_tasks_main():
     role_return_code = 2
   else:
     for entrie in tasks_main:
-
       try:
-        include_name=entrie["include"].split(".yml", 1)[0]
+        include_name = entrie[ _resolve_includes_name(entrie) ].split(".yml", 1)[0]
       except (KeyError, TypeError) as e:
         print RED_COLOR + "ERROR: some tests depend of the includes files and tags, it's not exist into {} , test exit early...".format(file_task_main_path) + RESET_COLOR
+        print RED_COLOR + "possible dict values are include, include_tasks, import_tasks" + RESET_COLOR
         print RED_COLOR + "Now i'am sad :(" + RESET_COLOR
         sys.exit(2)
 
@@ -289,7 +309,6 @@ def check_templates():
               
   except OSError:
     pass # no templates folder (not required)
-
 
 
 def main():

@@ -102,6 +102,20 @@ def check_env_vars():
     return_code = 2
 
 
+def _resolve_includes_name(dict_to_resolve):
+  try:
+    if dict_to_resolve["include"]:
+      return "include"
+  except(KeyError, TypeError):
+    pass
+
+  try:
+    if dict_to_resolve["import_playbook"]:
+      return "import_playbook"
+  except(KeyError, TypeError):
+    pass
+
+
 def check_site_includes():
   global return_code
   global project_path
@@ -109,13 +123,14 @@ def check_site_includes():
   try:
     site_yml = yaml_load("{}/site.yml".format(project_path))
     for line in site_yml:
-      _check_file_exist_not_empty("{}/{}".format(project_path , line['include']))
+      _check_file_exist_not_empty("{}/{}".format(project_path , line[ _resolve_includes_name(line) ]))
       
   except (IOError, OSError):
     print RED_COLOR + "can't read file {}/site.yml".format(project_path) + RESET_COLOR
     return_code = 2
   except(KeyError, TypeError):
     print RED_COLOR + "can't read includes in file {}/site.yml, file is missformed.".format(project_path) + RESET_COLOR
+    print RED_COLOR + "should have tasks inclusion with key include OR import_tasks OR include_tasks" + RESET_COLOR
     return_code = 2
 
 def get_group_vars_path():
