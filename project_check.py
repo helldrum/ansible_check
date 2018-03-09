@@ -89,27 +89,37 @@ def check_env_vars():
     global project_path
 
     try:
-        for filename in os.listdir("{}/env_vars".format(project_path)):
-            current_env_file = "{}/env_vars/{}".format(project_path, filename)
-            env_vars = yaml_load(current_env_file)
+        for env_var_folder in os.listdir("{}/env_vars/".format(
+            project_path)
+        ):
+            for env_vars_file in os.listdir("{}/env_vars/{}".format(
+                project_path, env_var_folder)
+            ):
 
-        if env_vars is None:
-            print RED_COLOR + "file {} doesn't have any variables".format(
-                current_env_file) + RESET_COLOR
-            return_code = 2
-        else:
-            for var_name in env_vars:
-                var_name = var_name.replace("-", "_")
-            if re.match("^env_.*", var_name) is None:
-                print RED_COLOR + "{} propertie dont respect the naming \
-                    convention prefix env_ into {}".format(
-                    var_name, current_env_file) + RESET_COLOR
-                return_code = 2
-    except (IOError, KeyError, OSError):
-        print RED_COLOR + "folder {}/env_vars is empty.".format(project_path)
-        + RESET_COLOR
+                current_env_var_file = "{}/env_vars/{}/{}".format(
+                    project_path, env_var_folder, env_vars_file)
+                _check_file_exist_not_empty(current_env_var_file)
+                env_vars = yaml_load(current_env_var_file)
+
+                if current_env_var_file is None:
+                    print RED_COLOR
+                    + "file {} doesn't have any variables".format(
+                        current_env_var_file) + RESET_COLOR
+                    return_code = 2
+                else:
+                    for var in env_vars:
+                        if re.match("^env_.*", var) is None:
+                            print RED_COLOR + "{} env var dont respect \
+the naming convention prefix env_ into\{}".format(var, current_env_var_file,
+                            current_env_var_file) + RESET_COLOR
+                            return_code = 2
+
+    except (IOError, KeyError, OSError) as e:
+        print e
+        print RED_COLOR + "folder env_vars doesn't have subfolder, tree should \
+be env_vars/{{env}}/my_env_var_file.yml .".format(
+            project_path) + RESET_COLOR
         return_code = 2
-
 
 def _resolve_includes_name(dict_to_resolve):
     try:
@@ -231,7 +241,7 @@ def main():
 
     check_default_files()
     check_site_includes()
-    # check_env_vars()
+    check_env_vars()
     group_var_path = get_group_vars_path()
     check_group_vars(group_var_path)
 
