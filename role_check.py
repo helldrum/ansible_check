@@ -188,13 +188,13 @@ role doesn't have default values.".format(default_main_path) + RESET_COLOR
     else:
         for var_name in default_main:
             if re.match("^{}.*".format(role_name), var_name) is None:
-                print RED_COLOR + "{} propertie dont respect the naming\
+                print RED_COLOR + "{} propertie dont respect the naming \
 convention prefix {}_ into {}.".format(
                   var_name,
                   role_name,
                   default_main_path
                 ) + RESET_COLOR
-        role_return_code = 2
+                role_return_code = 2
 
 
 def _resolve_includes_name(dict_to_resolve):
@@ -238,6 +238,7 @@ this file is required for playbook run.".format(
         print RED_COLOR + "file {} doesn't have any entries".format(
             file_task_main_path) + RESET_COLOR
         role_return_code = 2
+
     else:
         for entrie in tasks_main:
             try:
@@ -269,6 +270,7 @@ get '{}' instead into {}".format(
                     file_task_main_path
                 ) + RESET_COLOR
                 role_return_code = 2
+
             try:
                 if entrie["tags"][1] != include_name:
                     print RED_COLOR + "second tag for include '{}' should be '{}', \
@@ -284,6 +286,7 @@ into {}".format(
                     include_name, include_name,
                     file_task_main_path) + RESET_COLOR
                 role_return_code = 2
+
             try:
                 tag3 = "{}-{}".format(role_name, include_name)
                 if entrie["tags"][2] != tag3:
@@ -314,22 +317,22 @@ def check_templates():
 have the extension j2".format(full_template_path) + RESET_COLOR
             role_return_code = 2
 
-            try:
-                assert(os.path.getsize(full_template_path) > 0), RED_COLOR + "file {} \
-                is empty".format(full_template_path) + RESET_COLOR
-            except AssertionError as e:
-                role_return_code = 2
-                print e
+        try:
+            assert(os.path.getsize(full_template_path) > 0), RED_COLOR + "file {} \
+is empty".format(full_template_path) + RESET_COLOR
+        except AssertionError as e:
+            role_return_code = 2
+            print e
 
-            with open(full_template_path, "r") as f:
-                template_content = f.read()
-                if not template_filename.endswith(".json.j2"):
-                    if "{{ ansible_managed }}" not in template_content:
-                        role_return_code = 2
-                        print RED_COLOR + "template file {} need to have \
+        with open(full_template_path, "r") as f:
+            template_content = f.read()
+            if not template_filename.endswith(".json.j2"):
+                if "{{ ansible_managed }}" not in template_content:
+                    role_return_code = 2
+                    print RED_COLOR + "template file {} need to have \
 the variable {{{{ ansible_managed }}}}".format(
-                            full_template_path
-                        ) + RESET_COLOR
+                        full_template_path
+                    ) + RESET_COLOR
 
     except OSError:
         pass  # no templates folder (not required)
@@ -344,6 +347,7 @@ def main():
     check_defaults_main()
     check_tasks_main()
     check_templates()
+
 
     if role_return_code is 0:
         print GREEN_COLOR + "Everything is fine, \
