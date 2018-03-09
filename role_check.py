@@ -351,7 +351,7 @@ def main():
 
     if role_return_code is 0:
         print GREEN_COLOR + "Everything is fine, \
-        keep the good job :)" + RESET_COLOR
+keep the good job :)" + RESET_COLOR
     else:
         print RED_COLOR + "Now i'am sad :(" + RESET_COLOR
 
