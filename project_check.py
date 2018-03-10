@@ -96,33 +96,39 @@ def check_env_vars():
         for env_var_folder in os.listdir("{}/env_vars/".format(
             project_path)
         ):
-            for env_vars_file in os.listdir("{}/env_vars/{}".format(
-                project_path, env_var_folder)
-            ):
+            if os.path.isfile(project_path + "env_vars/" + env_var_folder):
+                print RED_COLOR + "{}env_vars/{} should not be into \
+env_var root (you should use env folder)".format(
+                 project_path, env_var_folder) + RESET_COLOR
+            else:
+                for env_vars_file in os.listdir("{}/env_vars/{}".format(
+                    project_path, env_var_folder)
+                ):
+                    current_env_var_file = "{}/env_vars/{}/{}".format(
+                        project_path, env_var_folder, env_vars_file)
+                    _check_file_exist_not_empty(current_env_var_file)
+                    env_vars = yaml_load(current_env_var_file)
 
-                current_env_var_file = "{}/env_vars/{}/{}".format(
-                    project_path, env_var_folder, env_vars_file)
-                _check_file_exist_not_empty(current_env_var_file)
-                env_vars = yaml_load(current_env_var_file)
-
-                if current_env_var_file is None:
-                    print RED_COLOR
-                    + "file {} doesn't have any variables".format(
-                        current_env_var_file) + RESET_COLOR
-                    return_code = 2
-                else:
-                    for var in env_vars:
-                        if re.match("^env_.*", var) is None:
-                            print RED_COLOR + "{} env var dont respect \
-the naming convention prefix env_ into\{}".format(var, current_env_var_file,
+                    if current_env_var_file is None:
+                        print RED_COLOR
+                        + "file {} doesn't have any variables".format(
                             current_env_var_file) + RESET_COLOR
-                            return_code = 2
+                        return_code = 2
+                    else:
+                        for var in env_vars:
+                            if re.match("^env_.*", var) is None:
+                                print RED_COLOR + "{} env var dont respect \
+the naming convention prefix env_ into {}".format(var,
+                                current_env_var_file,
+                                current_env_var_file) + RESET_COLOR
+                                return_code = 2
 
     except (IOError, KeyError, OSError) as e:
-        print RED_COLOR + "folder env_vars doesn't have subfolder, tree should \
+       print e
+       print RED_COLOR + "folder env_vars doesn't have subfolder, tree should \
 be env_vars/{{env}}/my_env_var_file.yml .".format(
-            project_path) + RESET_COLOR
-        return_code = 2
+           project_path) + RESET_COLOR
+       return_code = 2
 
 def _resolve_includes_name(dict_to_resolve):
     try:
@@ -153,7 +159,7 @@ def check_site_includes():
             project_path) + RESET_COLOR
         return_code = 2
     except(KeyError, TypeError):
-        print RED_COLOR + "can't read includes in file {}/site.yml, \
+        print RED_COLOR + "can't read includes in file {}site.yml, \
 file is missformed.".format(project_path) + RESET_COLOR
         print RED_COLOR + "should have tasks inclusion with key include \
 OR import_tasks OR include_tasks" + RESET_COLOR
@@ -188,7 +194,7 @@ def check_group_vars(group_var_path):
                         project_path, group_var_path, group_folder)):
                     service_name = os.path.splitext(group_file)[0]
                     service_name = service_name.replace("-", "_")
-                    current_group_file = "{}/{}/{}/{}".format(
+                    current_group_file = "{}{}/{}/{}".format(
                         project_path, group_var_path, group_folder, group_file)
                     _check_file_exist_not_empty(current_group_file)
                     groups_vars = yaml_load(current_group_file)
@@ -202,7 +208,7 @@ def check_group_vars(group_var_path):
                             if re.match("^{}_.*".format(service_name),
                                         group_name) is None:
                                 print RED_COLOR + "{} propertie dont respect \
-the naming convention prefix {}_ into\{}".format(group_name, service_name,
+the naming convention prefix {}_ into {}".format(group_name, service_name,
                                     current_group_file) + RESET_COLOR
                                 return_code = 2
 
