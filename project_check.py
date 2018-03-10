@@ -115,7 +115,6 @@ the naming convention prefix env_ into\{}".format(var, current_env_var_file,
                             return_code = 2
 
     except (IOError, KeyError, OSError) as e:
-        print e
         print RED_COLOR + "folder env_vars doesn't have subfolder, tree should \
 be env_vars/{{env}}/my_env_var_file.yml .".format(
             project_path) + RESET_COLOR
@@ -151,9 +150,9 @@ def check_site_includes():
         return_code = 2
     except(KeyError, TypeError):
         print RED_COLOR + "can't read includes in file {}/site.yml, \
-        file is missformed.".format(project_path) + RESET_COLOR
+file is missformed.".format(project_path) + RESET_COLOR
         print RED_COLOR + "should have tasks inclusion with key include \
-        OR import_tasks OR include_tasks" + RESET_COLOR
+OR import_tasks OR include_tasks" + RESET_COLOR
         return_code = 2
 
 def get_group_vars_path():
