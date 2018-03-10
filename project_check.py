@@ -124,7 +124,6 @@ the naming convention prefix env_ into {}".format(var,
                                 return_code = 2
 
     except (IOError, KeyError, OSError) as e:
-       print e
        print RED_COLOR + "folder env_vars doesn't have subfolder, tree should \
 be env_vars/{{env}}/my_env_var_file.yml .".format(
            project_path) + RESET_COLOR
