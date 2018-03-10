@@ -96,10 +96,11 @@ def check_env_vars():
         for env_var_folder in os.listdir("{}/env_vars/".format(
             project_path)
         ):
-            if os.path.isfile(project_path + "env_vars/" + env_var_folder):
-                print RED_COLOR + "{}env_vars/{} should not be into \
+            if os.path.isfile(project_path + "/env_vars/" + env_var_folder):
+                print RED_COLOR + "{}/env_vars/{} should not be into \
 env_var root (you should use env folder)".format(
-                 project_path, env_var_folder) + RESET_COLOR
+                    project_path, env_var_folder) + RESET_COLOR
+                return_code = 2
             else:
                 for env_vars_file in os.listdir("{}/env_vars/{}".format(
                     project_path, env_var_folder)
@@ -124,10 +125,10 @@ the naming convention prefix env_ into {}".format(var,
                                 return_code = 2
 
     except (IOError, KeyError, OSError) as e:
-       print RED_COLOR + "folder env_vars doesn't have subfolder, tree should \
+        print RED_COLOR + "folder env_vars doesn't have subfolder, tree should \
 be env_vars/{{env}}/my_env_var_file.yml .".format(
            project_path) + RESET_COLOR
-       return_code = 2
+        return_code = 2
 
 def _resolve_includes_name(dict_to_resolve):
     try:
@@ -193,7 +194,7 @@ def check_group_vars(group_var_path):
                         project_path, group_var_path, group_folder)):
                     service_name = os.path.splitext(group_file)[0]
                     service_name = service_name.replace("-", "_")
-                    current_group_file = "{}{}/{}/{}".format(
+                    current_group_file = "{}/{}/{}/{}".format(
                         project_path, group_var_path, group_folder, group_file)
                     _check_file_exist_not_empty(current_group_file)
                     groups_vars = yaml_load(current_group_file)
@@ -236,7 +237,7 @@ def check_roles():
                 script_path), "-p", role_path])
             sys.stdout.flush()
             if code is 2:
-                    return_code = 2
+                return_code = 2
 
 
 def main():
@@ -253,8 +254,8 @@ def main():
     check_group_vars(group_var_path)
 
     if return_code is 0:
-        print GREEN_COLOR
-        + "Project structure is fine, keep the good job :)" + RESET_COLOR
+        print GREEN_COLOR + "Project structure is fine, keep the good job :)"
+        + RESET_COLOR
     else:
         print RED_COLOR + "Project structure not good,\
 Now i'am sad :(" + RESET_COLOR
