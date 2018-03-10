@@ -46,10 +46,14 @@ def _check_file_exist_not_empty(current_file):
     global role_path
     global role_return_code
     try:
-        assert(os.path.exists(current_file)), RED_COLOR + "FATAL:\
-file {} not found".format(current_file) + RESET_COLOR
-        assert(os.path.getsize(current_file) > 0), RED_COLOR + "FATAL:\
-file {} is empty".format(current_file) + RESET_COLOR
+        assert(os.path.exists(
+            current_file)), RED_COLOR + "FATAL : file {} not found".format(
+            current_file) + RESET_COLOR
+
+        # file contain at leat 1 character
+        assert(os.path.getsize(
+            current_file) > 1), RED_COLOR + "FATAL : file {} is empty".format(
+            current_file) + RESET_COLOR
     except (AssertionError, OSError) as e:
         role_return_code = 2
         print e

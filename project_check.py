@@ -50,11 +50,15 @@ def _check_file_exist_not_empty(current_file):
     global project_path
     global return_code
     try:
-        assert(os.path.exists(current_file)), \
-            RED_COLOR + "file {} not found".format(current_file) + RESET_COLOR
-        assert(os.path.getsize(current_file) > 0),\
-            RED_COLOR + "file {} is empty".format(current_file) + RESET_COLOR
-    except (AssertionError, OSError):
+        assert(os.path.exists(
+            current_file)), RED_COLOR + "file {} not found".format(
+            current_file) + RESET_COLOR
+        # file contain at leat 1 character
+        assert(os.path.getsize(
+            current_file) > 1), RED_COLOR + "file {} is empty".format(
+            current_file) + RESET_COLOR
+    except (AssertionError, OSError) as e:
+        print e  # print e is requiered in order to display error message
         return_code = 2
 
 
@@ -190,8 +194,7 @@ def check_group_vars(group_var_path):
                     groups_vars = yaml_load(current_group_file)
 
                     if groups_vars is None:
-                        print RED_COLOR
-                        + "file {} doesn't have any variables".format(
+                        print RED_COLOR + "file {} doesn't have any variables".format(
                             current_group_file) + RESET_COLOR
                         return_code = 2
                     else:
