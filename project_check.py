@@ -159,7 +159,7 @@ def check_site_includes():
             project_path) + RESET_COLOR
         return_code = 2
     except(KeyError, TypeError):
-        print RED_COLOR + "can't read includes in file {}site.yml, \
+        print RED_COLOR + "can't read includes in file {}/site.yml, \
 file is missformed.".format(project_path) + RESET_COLOR
         print RED_COLOR + "should have tasks inclusion with key include \
 OR import_tasks OR include_tasks" + RESET_COLOR
