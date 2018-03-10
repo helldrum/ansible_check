@@ -3,7 +3,7 @@
 echo -e "TEST:project doesn't have required files"
 ./project_check.py -p test/project/missing_required_files
 
-echo -e "TEST:project required files are empty"
+echo -e "\n\nTEST:project required files are empty"
 ./project_check.py -p test/project/empty_required_files
 
 echo -e "\n\nTEST:project site includes missformed"
