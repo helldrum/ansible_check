@@ -254,8 +254,8 @@ def main():
     check_group_vars(group_var_path)
 
     if return_code is 0:
-        print GREEN_COLOR + "Project structure is fine, keep the good job :)"
-        + RESET_COLOR
+        print GREEN_COLOR + "Project structure is fine, \
+keep the good job :)" + RESET_COLOR
     else:
         print RED_COLOR + "Project structure not good,\
 Now i'am sad :(" + RESET_COLOR
@@ -264,9 +264,8 @@ Now i'am sad :(" + RESET_COLOR
 
     if return_code is 0:
         print "\n"
-        print GREEN_COLOR
-        + "End of tests, everything is fine, keep the good job :)"
-        + RESET_COLOR
+        print GREEN_COLOR + "End of tests, everything is fine, \
+keep the good job :)" + RESET_COLOR
     else:
         print "\n"
         print RED_COLOR + "End of tests, some tests failed, \
