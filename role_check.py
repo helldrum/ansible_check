@@ -302,7 +302,7 @@ for include '{}' should be '{}', get {} instead into {}.".format(
 
             except (IndexError, KeyError):
                 print RED_COLOR + "tag rolename-includename is missing on include {} \
-                into {}.".format(
+into {}.".format(
                     include_name, file_task_main_path) + RESET_COLOR
                 role_return_code = 2
 
