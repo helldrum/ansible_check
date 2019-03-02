@@ -111,19 +111,21 @@ env_var root (you should use env folder)".format(
                     env_vars = yaml_load(current_env_var_file)
 
                     if current_env_var_file is None:
-                        print RED_COLOR
-                        + "file {} doesn't have any variables".format(
+                        print RED_COLOR + "file {} doesn't have any variables".format(
                             current_env_var_file) + RESET_COLOR
                         return_code = 2
                     else:
-                        for var in env_vars:
-                            if re.match("^env_.*", var) is None:
-                                print RED_COLOR + "{} env var dont respect \
+                        if env_vars:
+                            for var in env_vars:
+                                if re.match("^env_.*", var) is None:
+                                    print RED_COLOR + "{} env var dont respect \
 the naming convention prefix env_ into {}".format(var,
-                                current_env_var_file,
+                                    current_env_var_file,
+                                    current_env_var_file) + RESET_COLOR
+                                    return_code = 2
+                        else:
+                            print RED_COLOR + "file {} doesn't have any variables".format(
                                 current_env_var_file) + RESET_COLOR
-                                return_code = 2
-
     except (IOError, KeyError, OSError) as e:
         print RED_COLOR + "folder env_vars doesn't have subfolder, tree should \
 be env_vars/{{env}}/my_env_var_file.yml .".format(
