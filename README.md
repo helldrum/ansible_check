@@ -1,3 +1,7 @@
+# dependancies
+python 3.x.x
+pyyaml
+
 # description 
 this tool is design to test ansible roles and ansible project an failed if the project don't respect skales5 best pratices
 ### if the script success output will be
