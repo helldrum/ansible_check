@@ -24,11 +24,11 @@ def check_args():
     (options, args) = parser.parse_args()
 
     if options.role_path is None:
-        print "ERROR: arg parameter --role_path mandatory, exiting ..."
+        print ("ERROR: arg parameter --role_path mandatory, exiting ...")
         sys.exit(2)
 
     if not os.path.exists(options.role_path):
-        print "ERROR: arg role path {} not valid".format(options.role_path)
+        print ("ERROR: arg role path {} not valid".format(options.role_path))
         sys.exit(2)
     else:
         role_path = options.role_path
@@ -38,7 +38,7 @@ def yaml_load(filename):
     global role_name
     with open(filename, 'r') as stream:
         try:
-            return (yaml.load(stream))
+            return (yaml.load(stream, Loader=yaml.SafeLoader))
         except yaml.YAMLError as exc:
             print(exc)
 
@@ -56,7 +56,7 @@ def _check_file_exist_not_empty(current_file):
             current_file) + RESET_COLOR
     except (AssertionError, OSError) as e:
         role_return_code = 2
-        print e
+        print (e)
 
 def check_meta_main():
     global role_return_code
@@ -71,10 +71,10 @@ def check_meta_main():
         role_name = meta["galaxy_info"]["galaxy_tags"][0]
         role_name = role_name.replace("-", "_")
     except (IOError, KeyError, AttributeError, TypeError, IndexError):
-        print RED_COLOR + "ERROR: some tests depend of the property galaxy_tags into {} \
+        print (RED_COLOR + "ERROR: some tests depend of the property galaxy_tags into {} \
         \nplease create this propertie, test exit early...".format(
-            meta_file_path) + RESET_COLOR
-        print RED_COLOR + "Now i'am sad :(" + RESET_COLOR
+            meta_file_path) + RESET_COLOR)
+        print (RED_COLOR + "Now i'am sad :(" + RESET_COLOR)
         sys.exit(2)
 
     try:
@@ -83,77 +83,77 @@ def check_meta_main():
                 pattern, role_name).group() is not role_name:
             raise KeyError
     except (KeyError):
-        print RED_COLOR + "ERROR: property galaxy_tags into {} doesn't match\
+        print (RED_COLOR + "ERROR: property galaxy_tags into {} doesn't match\
 pattern {} give '{}' match '{}' \
 \nplease fix this propertie, test exit early...".format(
             meta_file_path, pattern, role_name,
-            re.match(pattern, role_name).group()) + RESET_COLOR
-        print RED_COLOR + "Now i'am sad :(" + RESET_COLOR
+            re.match(pattern, role_name).group()) + RESET_COLOR)
+        print (RED_COLOR + "Now i'am sad :(" + RESET_COLOR)
         sys.exit(2)
 
     try:
         meta = yaml_load(meta_file_path)
         role_platform = meta["galaxy_info"]["platforms"][0]["name"]
     except (IOError, KeyError, TypeError):
-        print RED_COLOR + "ERROR: some tests depend of the property\
+        print (RED_COLOR + "ERROR: some tests depend of the property\
 [\"galaxy_info\"][\"platforms\"][0][\"name\"], it's not exist into {} ,\
-test exit early...".format(meta_file_path) + RESET_COLOR
-        print RED_COLOR + "Now i'am sad :(" + RESET_COLOR
+test exit early...".format(meta_file_path) + RESET_COLOR)
+        print (RED_COLOR + "Now i'am sad :(" + RESET_COLOR)
         sys.exit(2)
 
     try:
         meta["galaxy_info"]["author"]
         if not meta["galaxy_info"]["author"]:
-            print RED_COLOR + "the key [\"galaxy_info\"][\"author\"]\
-is empty into {}".format(meta_file_path) + RESET_COLOR
+            print (RED_COLOR + "the key [\"galaxy_info\"][\"author\"]\
+is empty into {}".format(meta_file_path) + RESET_COLOR)
             role_return_code = 2
     except KeyError:
-        print RED_COLOR + "the key [\"galaxy_info\"][\"author\"]\
-is missing into {}".format(meta_file_path) + RESET_COLOR
+        print (RED_COLOR + "the key [\"galaxy_info\"][\"author\"]\
+is missing into {}".format(meta_file_path) + RESET_COLOR)
         role_return_code = 2
 
     try:
         meta["galaxy_info"]["description"]
         if not meta["galaxy_info"]["description"]:
-            print RED_COLOR + "the key [\"galaxy_info\"][\"description\"]\
-is empty into {}".format(meta_file_path) + RESET_COLOR
+            print (RED_COLOR + "the key [\"galaxy_info\"][\"description\"]\
+is empty into {}".format(meta_file_path) + RESET_COLOR)
             role_return_code = 2
     except KeyError:
-        print RED_COLOR + "the key [\"galaxy_info\"][\"description\"]\
-is missing into {}".format(meta_file_path) + RESET_COLOR
+        print (RED_COLOR + "the key [\"galaxy_info\"][\"description\"]\
+is missing into {}".format(meta_file_path) + RESET_COLOR)
         role_return_code = 2
 
     try:
         meta["galaxy_info"]["company"]
         if not meta["galaxy_info"]["company"]:
-            print RED_COLOR + "the key [\"galaxy_info\"][\"company\"]\
-is empty into {}".format(meta_file_path) + RESET_COLOR
+            print (RED_COLOR + "the key [\"galaxy_info\"][\"company\"]\
+is empty into {}".format(meta_file_path) + RESET_COLOR)
             role_return_code = 2
     except KeyError:
-        print RED_COLOR + "the key [\"galaxy_info\"][\"company\"]\
-is missing into {}".format(meta_file_path) + RESET_COLOR
+        print (RED_COLOR + "the key [\"galaxy_info\"][\"company\"]\
+is missing into {}".format(meta_file_path) + RESET_COLOR)
         role_return_code = 2
 
     try:
         meta["galaxy_info"]["license"]
         if not meta["galaxy_info"]["license"]:
-            print RED_COLOR + "the key [\"galaxy_info\"][\"licence\"]\
-is empty into {}".format(meta_file_path) + RESET_COLOR
+            print (RED_COLOR + "the key [\"galaxy_info\"][\"licence\"]\
+is empty into {}".format(meta_file_path) + RESET_COLOR)
             role_return_code = 2
     except KeyError:
-        print RED_COLOR + "the key [\"galaxy_info/\"][\"license\"]\
-is missing into {}".format(meta_file_path) + RESET_COLOR
+        print (RED_COLOR + "the key [\"galaxy_info/\"][\"license\"]\
+is missing into {}".format(meta_file_path) + RESET_COLOR)
         role_return_code = 2
 
     try:
         meta["galaxy_info"]["min_ansible_version"]
         if not meta["galaxy_info"]["min_ansible_version"]:
-            print RED_COLOR + "the key [\"galaxy_info\"][\"min_ansible_version\"]\
-is empty into {}".format(meta_file_path) + RESET_COLOR
+            print (RED_COLOR + "the key [\"galaxy_info\"][\"min_ansible_version\"]\
+is empty into {}".format(meta_file_path) + RESET_COLOR)
             role_return_code = 2
     except KeyError:
-        print RED_COLOR + "the key [\"galaxy_info\"][\"min_ansible_version\"]\
-is missing into {}".format(meta_file_path) + RESET_COLOR
+        print (RED_COLOR + "the key [\"galaxy_info\"][\"min_ansible_version\"]\
+is missing into {}".format(meta_file_path) + RESET_COLOR)
         role_return_code = 2
 
     return role_return_code
@@ -177,27 +177,27 @@ def check_defaults_main():
     try:
         default_main = yaml_load(default_main_path)
     except IOError:
-        print RED_COLOR + "FATAL: can't open the file {} ,\
-role doesn't have default values.".format(default_main_path) + RESET_COLOR
-        print RED_COLOR + "test end  before the end" + RESET_COLOR
-        print RED_COLOR + "Now, i'am sad :(" + RESET_COLOR
+        print (RED_COLOR + "FATAL: can't open the file {} ,\
+role doesn't have default values.".format(default_main_path) + RESET_COLOR)
+        print (RED_COLOR + "test end  before the end" + RESET_COLOR)
+        print (RED_COLOR + "Now, i'am sad :(" + RESET_COLOR)
 
         sys.exit(2)
 
     # default/main.yml  check naming convention
     if default_main is None:
-        print RED_COLOR + "file {} doesn't have any default value.".format(
-            default_main_path) + RESET_COLOR
+        print (RED_COLOR + "file {} doesn't have any default value.".format(
+            default_main_path) + RESET_COLOR)
         role_return_code = 2
     else:
         for var_name in default_main:
             if re.match("^{}.*".format(role_name), var_name) is None:
-                print RED_COLOR + "{} propertie dont respect the naming \
+                print (RED_COLOR + "{} propertie dont respect the naming \
 convention prefix {}_ into {}.".format(
                   var_name,
                   role_name,
                   default_main_path
-                ) + RESET_COLOR
+                ) + RESET_COLOR)
                 role_return_code = 2
 
 
@@ -231,16 +231,16 @@ def check_tasks_main():
     try:
         tasks_main = yaml_load(file_task_main_path)
     except IOError:
-        print RED_COLOR + "FATAL: can't open the file {},\
+        print (RED_COLOR + "FATAL: can't open the file {},\
 this file is required for playbook run.".format(
-            file_task_main_path) + RESET_COLOR
-        print RED_COLOR + "test end  before the end" + RESET_COLOR
-        print RED_COLOR + "Now, i'am sad :(" + RESET_COLOR
+            file_task_main_path) + RESET_COLOR)
+        print (RED_COLOR + "test end  before the end" + RESET_COLOR)
+        print (RED_COLOR + "Now, i'am sad :(" + RESET_COLOR)
         sys.exit(2)
 
     if tasks_main is None:
-        print RED_COLOR + "file {} doesn't have any entries".format(
-            file_task_main_path) + RESET_COLOR
+        print (RED_COLOR + "file {} doesn't have any entries".format(
+            file_task_main_path) + RESET_COLOR)
         role_return_code = 2
 
     else:
@@ -249,61 +249,61 @@ this file is required for playbook run.".format(
                 include_name = entrie[_resolve_includes_name(
                     entrie)].split(".yml", 1)[0]
             except (KeyError, TypeError):
-                print RED_COLOR + "ERROR:\
+                print (RED_COLOR + "ERROR:\
 some tests depend of the includes files and tags,\
 it's not exist into {} , test exit early...".format(
-                    file_task_main_path) + RESET_COLOR
-                print RED_COLOR + "possible dict values are include,\
-include_tasks, import_tasks" + RESET_COLOR
-                print RED_COLOR + "Now i'am sad :(" + RESET_COLOR
+                    file_task_main_path) + RESET_COLOR)
+                print (RED_COLOR + "possible dict values are include,\
+include_tasks, import_tasks" + RESET_COLOR)
+                print (RED_COLOR + "Now i'am sad :(" + RESET_COLOR)
                 sys.exit(2)
 
             try:
                 if entrie["tags"][0] != role_name:
-                    print RED_COLOR + "first tag for include '{}' should be '{}',\
+                    print (RED_COLOR + "first tag for include '{}' should be '{}',\
 get '{}' instead into {}".format(
                         include_name, role_name,
                         entrie["tags"][0], file_task_main_path
-                    ) + RESET_COLOR
+                    ) + RESET_COLOR)
                     role_return_code = 2
 
             except (IndexError, KeyError):
-                print RED_COLOR + "tag '{}' is missing on include\
+                print (RED_COLOR + "tag '{}' is missing on include\
  '{}' \into {}".format(
                     role_name, include_name,
                     file_task_main_path
-                ) + RESET_COLOR
+                ) + RESET_COLOR)
                 role_return_code = 2
 
             try:
                 if entrie["tags"][1] != include_name:
-                    print RED_COLOR + "second tag for include '{}' should be '{}', \
+                    print (RED_COLOR + "second tag for include '{}' should be '{}', \
  get '{}' instead into {}".format(
                         include_name, include_name,
                         entrie["tags"][1], file_task_main_path
-                    ) + RESET_COLOR
+                    ) + RESET_COLOR)
                     role_return_code = 2
 
             except (IndexError, KeyError):
-                print RED_COLOR + "tag '{}' is missing on include '{}' \
+                print (RED_COLOR + "tag '{}' is missing on include '{}' \
 into {}".format(
                     include_name, include_name,
-                    file_task_main_path) + RESET_COLOR
+                    file_task_main_path) + RESET_COLOR)
                 role_return_code = 2
 
             try:
                 tag3 = "{}-{}".format(role_name, include_name)
                 if entrie["tags"][2] != tag3:
-                    print RED_COLOR + "third tag rolename-includename \
+                    print (RED_COLOR + "third tag rolename-includename \
 for include '{}' should be '{}', get {} instead into {}.".format(
                         include_name, tag3,
-                        entrie["tags"][2], file_task_main_path) + RESET_COLOR
+                        entrie["tags"][2], file_task_main_path) + RESET_COLOR)
                     role_return_code = 2
 
             except (IndexError, KeyError):
-                print RED_COLOR + "tag rolename-includename is missing on include {} \
+                print (RED_COLOR + "tag rolename-includename is missing on include {} \
 into {}.".format(
-                    include_name, file_task_main_path) + RESET_COLOR
+                    include_name, file_task_main_path) + RESET_COLOR)
                 role_return_code = 2
 
 
@@ -317,8 +317,8 @@ def check_templates():
                 role_path, template_filename)
 
         if not template_filename.endswith(".j2"):
-            print RED_COLOR + "file {} in folder template doesn't \
-have the extension j2".format(full_template_path) + RESET_COLOR
+            print (RED_COLOR + "file {} in folder template doesn't \
+have the extension j2".format(full_template_path) + RESET_COLOR)
             role_return_code = 2
 
         try:
@@ -326,17 +326,17 @@ have the extension j2".format(full_template_path) + RESET_COLOR
 is empty".format(full_template_path) + RESET_COLOR
         except AssertionError as e:
             role_return_code = 2
-            print e
+            print (e)
 
         with open(full_template_path, "r") as f:
             template_content = f.read()
             if not template_filename.endswith(".json.j2"):
                 if "{{ ansible_managed }}" not in template_content:
                     role_return_code = 2
-                    print RED_COLOR + "template file {} need to have \
+                    print (RED_COLOR + "template file {} need to have \
 the variable {{{{ ansible_managed }}}}".format(
                         full_template_path
-                    ) + RESET_COLOR
+                    ) + RESET_COLOR)
 
     except OSError:
         pass  # no templates folder (not required)
@@ -354,10 +354,10 @@ def main():
 
 
     if role_return_code is 0:
-        print GREEN_COLOR + "Everything is fine, \
-keep the good job :)" + RESET_COLOR
+        print (GREEN_COLOR + "Everything is fine, \
+keep the good job :)" + RESET_COLOR)
     else:
-        print RED_COLOR + "Now i'am sad :(" + RESET_COLOR
+        print (RED_COLOR + "Now i'am sad :(" + RESET_COLOR)
 
     sys.exit(role_return_code)
 
