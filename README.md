@@ -30,6 +30,8 @@ Preview
 Now i'am sad :(
 ```
 # usage
+### test script
+use the `test.sh` in order to test scripts beavior on moke ansible test build to trigger errors
 
 ### test a role
 If you run the script without parameters the script assume that the roles you want to test in on the same directory than the script
