@@ -1,7 +1,9 @@
 # description 
 
 this tool is design to check skale5 best pratice on ansible and project.
+
 the goal is to trigger errors when the role or project doesn't respect convention.
+
 Skale5 best pratice and convention will be detailled following below. 
 
 # dependencies
