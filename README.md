@@ -124,12 +124,12 @@ galaxy_info:
 
 ## tasks/main.yml
 
-  - if the file cannod be load, script will be abord with an Error
-  - if the file doesn't have any entries but begin with --- the script will continue but you will have an error empty file
-    - else check for each include entries
-      - first tag is the name of the role (compared with the value of  ansible_galaxy_tags)
-      - second tag is the name of the include file minus ".yml" (example: if include: install.yml, first tag need to be install)
-      - third tag need to be exactly the concatenation between the first and the second tag separed with "-" (example rclone-install)
+- if the file cannod be load, script will be abord with an Error
+- if the file doesn't have any entries but begin with --- the script will continue but you will have an error empty file
+  - else check for each include entries
+    - first tag is the name of the role (compared with the value of  ansible_galaxy_tags)
+    - second tag is the name of the include file minus ".yml" (example: if include: install.yml, first tag need to be install)
+    - third tag need to be exactly the concatenation between the first and the second tag separed with "-" (example rclone-install)
 
 
 example or normalize main.yml
@@ -179,15 +179,19 @@ whe don't want empty playbook file
 ## folder env_vars
 
 in order to use variable precedence in an organise way
-- check if file have at least one variable
+- check if env vars file are not int env var  root (you should use env folder)
+- check if env var folder have subfolders with env names
+- check if env files have at least one variable
 - check if all variables begin with the prefix 'env_'
   
 ## file site.yml
 
 - check if all the includes files exist on the project and not empty
+- check for keys include OR import_tasks OR include_tasks
 
 ## group var folder
 
+- check if folder group_var exist (check exiting early if not)
 - check if all the files are not empty
 - check if all the files have at least one variable
 - check if all the file respect the naming convention prefix 'file_name_'
@@ -197,3 +201,4 @@ example:
 ```
 on group_vars/www/rclone.yml all the variable begin with 'rclone_'
 ```
+
