@@ -1,62 +1,104 @@
-# dependancies
+# description 
+
+this tool is design to check skale5 best pratice on ansible and project.
+the goal is to trigger errors when the role or project doesn't respect convention.
+Skale5 best pratice and convention will be detailled following below. 
+
+# dependencies
 
 python 3.x.x
 
 pyyaml
 
-# description 
-this tool is design to test ansible roles and ansible project an failed if the project don't respect skales5 best pratices
-### if the script success output will be
-```
-Everything is fine, keep the good job :)
-```
-### if the script failed output will be
-```
-{some errors}
-{some errors}
-{some errors}
-{some errors}
-Now i'am sad :(
-```
-
-example
-```
-file /path/to/my/role/meta/main.yml not found
-ERROR: some tests depend of the property galaxy_tags into /path/to/my/role/meta/main.yml please create this propertie, test exit early...
-Markdown
-Toggle Zen Mode
-Preview
-
-Now i'am sad :(
-```
 # usage
-### test script
-use the `test.sh` in order to test scripts beavior on moke ansible test build to trigger errors
 
-### test a role
-If you run the script without parameters the script assume that the roles you want to test in on the same directory than the script
-you better use the -p parameter in order to give the path to the role you want to test
+##  role_check.py
+
+the script role\_check.py is used to check a single ansible roles and need a mandatory parameter `-p` or  `--role_path`.
+
+you need to use the project script is you want to test the full structure 
+
+(project script check project structure and call the role\_check.py script for each roles found)
+
+example:
 
 ```
 ./role_check.py -p path/to/your/role/folder
+or ./role_check.py --role_path path/to/your/role/folder
 ```
-WARNING: this script doesn't work with multiples roles and in a full project structure (doesn't check group_var and env_var folder)  use project_check.py instead
 
-#### role checking steps
+## project\_check.py
+
+project\_check.py check the full ansible project and call role\_check.py for each roles found.
+
+this script need a mandatory parameter "-p" or "--project\_path".
+
+
+## test.sh
+
+this script is used to test all the possible errors supported by  project and role check script.
+
+you can call this script as is
+
+```
+./test.sh
+```
+
+tests run the checking scripts on various missformed roles and project, in order to display error messages.
+
+expected behaviour is to have ERROR messages in red and the message "Everything is fine, keep the good job :)" in green  
+
+on project and role who respect the conventions.
+
+please report if uncontrolled python stack message appear.
+
+
+### if the script success output will be
+
+```
+Everything is fine, keep the good job :)
+```
+
+### if the script failed output will be
+
+```
+{some errors}
+{some errors}
+{some errors}
+{some errors}
+Now i'am sad :(
+
+```
+
+# role checking steps
+
+## empty mandatory files 
+
 defaults/main.yml exist and not empty
 tasks/main.yml exist and not empty
 tasks/install.yml  exist and not empty
 meta/main.yml exist and not empty
-atleast one galaxy_tags exist (role name extract from this field)
-  - at this point, if the galaxy tags is not found, test script is abording
+
+## meta/main.yaml
 
 check meta/main.yml properties exist and not empty
-  - meta["galaxy_info"]["author"]
-  -  meta["galaxy_info"]["description"]
-  -  meta["galaxy_info"]["company"]
-  -  meta["galaxy_info"]["license"]
-  -  meta["galaxy_info"]["min_ansible_version"]
-  -  meta["galaxy_info"]["platforms"]
+
+```
+meta["galaxy_info"]["author"]
+meta["galaxy_info"]["description"]
+meta["galaxy_info"]["company"]
+meta["galaxy_info"]["license"]
+meta["galaxy_info"]["min_ansible_version"]
+meta["galaxy_info"]["platforms"]
+```
+
+/!\ you need at least one existing galaxy tag
+
+role name extract from this field at this point, if the galaxy tags is not found,
+
+check script is abording, you should add a tag and run the script again
+
+example of normalize meta:
 
 ```
 ---
@@ -73,18 +115,25 @@ galaxy_info:
   galaxy_tags:
     - rclone
 ```
-load the file defaults/main.yml
-  - if the file cannod be load, script will be abord with an Error
-  - if the file doesn't have any entries but begin with --- the script will continue but script exit status will be failed
+
+## defaults/main.yml
+
+  - if the file cannot be load, script will be abord with an Error
+  - if the file doesn't have any entries but begin with --- the script will continue but you will have an error empty file
     - else check if all the entries respect the suffix convention (all defaults value should be prefixed with the role name)
-    - 
-load the file tasks/main.yml
+
+## tasks/main.yml
+
   - if the file cannod be load, script will be abord with an Error
-  - if the file doesn't have any entries but begin with --- the script will continue but script exit status will be failed
+  - if the file doesn't have any entries but begin with --- the script will continue but you will have an error empty file
     - else check for each include entries
       - first tag is the name of the role (compared with the value of  ansible_galaxy_tags)
       - second tag is the name of the include file minus ".yml" (example: if include: install.yml, first tag need to be install)
       - third tag need to be exactly the concatenation between the first and the second tag separed with "-" (example rclone-install)
+
+
+example or normalize main.yml
+
 ```
 - include: install.yml
   tags:
@@ -92,42 +141,25 @@ load the file tasks/main.yml
     - install
     - rclone-install
 ```
-if the folder template exist
-  - check if all the template have the .j2 extention
+
+## folder template exist
+
+  - check if all the template have the .j2 extension (you should probably use a file folder if the file is not a template)
   - check if all the template began with the string # {{ ansible managed }} or // {{ ansible_managed }}
 
-### test a project
-you need to give the  / path of the project with the parameter -p
-```
-./project_check.py -p path/to/your/project/folder
-```
-this script check the project structure and call recursively ```check_role.py``` for all the roles on the folder role
+# project checking steps
+
+## required root project files
+
+the script check if thoses files exist and are not empty 
+
+- we are expecting at least 2 envs prod and preprod
+- basic ansible.cfg file
+- requirements.txt should have the ansible version and dependancies use for this project  
+- README.md in order to give project context
+- site.yml (the main ansible file with all playbooks includes)
 
 ```
-CHECK Project Structure
-file /path/to/my/project/env_vars/preprod.yml not found
-file /path/to/my/project/inventories/preprod.ini not found
-Project structure not good, Now i'am sad :(
-
-
-CHECK ROLE: backup-mysql
-
-file /path/to/my/project/roles/backup-mysql/meta/main.yml not found
-ERROR: some tests depend of the property galaxy_tags into /path/to/my/project/roles/backup-mysql/meta/main.yml please create this propertie, test exit early...
-Now i'am sad :(
-
-
-CHECK ROLE: postfix
-
-file /path/to/my/project/roles/postfix/meta/main.yml not found
-ERROR: some tests depend of the property galaxy_tags into /path/to/my/project/roles/postfix/meta/main.yml please create this propertie, test exit early...
-Now i'am sad :(
-
-End of test, Now i'am sad :(
-```
-#### project checking steps
-the script check is thoses files exist and are not empty 
-
 ansible.cfg
 env_vars/prod.yml
 env_vars/preprod.yml
@@ -137,22 +169,31 @@ inventories/prod.ini
 requirements.txt
 site.yml
 README.md
+```
 
+## folder play
 
-in  folder play check is all the files are not empty
+check is all the files are not empty
+whe don't want empty playbook file
 
-in folder env_vars
-  check if file have at least one variable
-  check if all variables begin with the prefix 'env_'
+## folder env_vars
+
+in order to use variable precedence in an organise way
+- check if file have at least one variable
+- check if all variables begin with the prefix 'env_'
   
-in the file site.yml
-    check if all the includes files exist on the project and not empty
-    
-in the group_var folder
-    check if all the files are not empty
-    check if all the files have at least one variable
-    check if all the file respect the naming convention prefix 'file_name_'
-        example:
-        on group_vars/www/rclone.yml all the variable begin with 'rclone_'
+## file site.yml
 
-    
+- check if all the includes files exist on the project and not empty
+
+## group var folder
+
+- check if all the files are not empty
+- check if all the files have at least one variable
+- check if all the file respect the naming convention prefix 'file_name_'
+
+example:
+
+```
+on group_vars/www/rclone.yml all the variable begin with 'rclone_'
+```
