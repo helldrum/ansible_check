@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding:utf8
 
 import os
@@ -353,7 +353,7 @@ def main():
     check_templates()
 
 
-    if role_return_code is 0:
+    if role_return_code == 0:
         print (GREEN_COLOR + "Everything is fine, \
 keep the good job :)" + RESET_COLOR)
     else:

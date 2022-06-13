@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding:utf8
 
 import os
@@ -238,7 +238,7 @@ def check_roles():
             code = call(["{}/role_check.py".format(
                 script_path), "-p", role_path])
             sys.stdout.flush()
-            if code is 2:
+            if code == 2:
                 return_code = 2
 
 
@@ -255,7 +255,7 @@ def main():
     group_var_path = get_group_vars_path()
     check_group_vars(group_var_path)
 
-    if return_code is 0:
+    if return_code == 0:
         print (GREEN_COLOR + "Project structure is fine, \
 keep the good job :)" + RESET_COLOR)
     else:
@@ -264,7 +264,7 @@ Now i'am sad :(" + RESET_COLOR)
 
     check_roles()
 
-    if return_code is 0:
+    if return_code == 0:
         print ("\n")
         print (GREEN_COLOR + "End of tests, everything is fine, \
 keep the good job :)" + RESET_COLOR)
